@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { AuthModal } from './components/AuthModal';
 import { CreateEventModal } from './components/CreateEventModal';
+import { DiGiBotModal } from './components/DiGiBotModal';
 import { EventDiscoveryPage } from './pages/EventDiscoveryPage';
 import { SearchEventsPage } from './pages/SearchEventsPage';
 import { EventDetailsPage } from './pages/EventDetailsPage';
@@ -126,13 +127,14 @@ export function AppContent() {
       {/* Footer */}
       <Footer />
 
-      {/* Modals */}
+      {/* Modals & Floating AI Assistant */}
       <AuthModal />
       <CreateEventModal
         isOpen={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onEventCreated={triggerRefresh}
       />
+      <DiGiBotModal />
     </div>
   );
 }

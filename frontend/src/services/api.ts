@@ -314,6 +314,15 @@ export const api = {
   },
 
   // Announcements
+  async chatWithBot(message: string): Promise<{ reply: string }> {
+    const res = await fetch(`${API_BASE}/bot/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message })
+    });
+    return await parseResponse(res);
+  },
+
   async getAnnouncements(): Promise<Announcement[]> {
     const res = await fetch(`${API_BASE}/announcements`);
     return await parseResponse(res);
