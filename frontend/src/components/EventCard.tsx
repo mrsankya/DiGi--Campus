@@ -31,59 +31,59 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, onQuickReg
   return (
     <div 
       onClick={onClick}
-      className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden flex flex-col cursor-pointer hover:shadow-xl hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-1"
+      className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden flex flex-col cursor-pointer hover:shadow-xl hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1"
     >
       {/* Image Banner */}
-      <div className="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-950">
+      <div className="relative h-52 w-full overflow-hidden bg-slate-200 dark:bg-slate-950">
         <img
           src={event.image}
           alt={event.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         
         {/* Category Pill */}
-        <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md ${categoryColors[event.category] || 'bg-slate-800 text-white'}`}>
+        <span className={`absolute top-3 left-3 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-md ${categoryColors[event.category] || 'bg-slate-800 text-white'}`}>
           {event.category}
         </span>
 
         {/* Price Tag */}
-        <span className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-black bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-md border border-slate-200 dark:border-slate-800">
+        <span className="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-black bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-md border border-slate-200 dark:border-slate-800">
           {event.price === 0 ? 'FREE ENTRY' : `$${event.price}`}
         </span>
 
         {/* Date badge */}
-        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-white text-xs font-semibold bg-black/60 px-3 py-1 rounded-xl backdrop-blur-md">
-          <Calendar className="w-3.5 h-3.5 text-sky-400" />
+        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-white text-xs font-bold bg-black/75 px-3 py-1.5 rounded-xl backdrop-blur-md">
+          <Calendar className="w-4 h-4 text-sky-400" />
           <span>{formattedDate}</span>
-          <span className="opacity-75">• {event.time}</span>
+          <span className="opacity-90">• {event.time}</span>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+      <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
         <div>
-          <h3 className="text-lg font-black text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug font-heading">
+          <h3 className="text-xl font-black text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug font-heading">
             {event.title}
           </h3>
-          <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 line-clamp-2 leading-relaxed font-normal">
+          <p className="text-sm text-slate-700 dark:text-slate-200 mt-2.5 line-clamp-2 leading-relaxed font-medium">
             {event.description}
           </p>
         </div>
 
         {/* Seat Fill Progress Bar */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-[11px] font-bold text-slate-600 dark:text-slate-400">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs font-extrabold text-slate-800 dark:text-slate-200">
             <span className="flex items-center gap-1">
-              <Users className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" /> {event.registeredCount} / {event.capacity} Registered
+              <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" /> {event.registeredCount} / {event.capacity} Registered
             </span>
             {spotsLeft > 0 ? (
-              <span className="text-emerald-600 dark:text-emerald-400 font-bold">{spotsLeft} seats left</span>
+              <span className="text-emerald-700 dark:text-emerald-400 font-black px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950">{spotsLeft} seats left</span>
             ) : (
-              <span className="text-rose-600 dark:text-rose-400 font-bold">Housefull</span>
+              <span className="text-rose-700 dark:text-rose-400 font-black px-2 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950">Housefull</span>
             )}
           </div>
-          <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+          <div className="w-full h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
             <div
               className="h-full bg-blue-600 rounded-full transition-all duration-500"
               style={{ width: `${Math.min(fillPercentage, 100)}%` }}
@@ -92,15 +92,15 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, onQuickReg
         </div>
 
         {/* Location Specs */}
-        <div className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
-          <MapPin className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 pt-3 border-t border-slate-200 dark:border-slate-800">
+          <MapPin className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
           <span className="truncate">{event.location}</span>
         </div>
 
         {/* Footer Actions */}
         <div className="pt-2 flex items-center justify-between gap-2">
-          <span className="text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-            View Details <ArrowRight className="w-3.5 h-3.5" />
+          <span className="text-xs font-black text-blue-600 dark:text-blue-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+            View Details <ArrowRight className="w-4 h-4" />
           </span>
 
           {onQuickRegister && (
@@ -110,10 +110,10 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, onQuickReg
                 onQuickRegister(event);
               }}
               disabled={isFull}
-              className={`px-4 py-2 rounded-xl text-xs font-bold shadow-sm transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-black shadow-md transition-all ${
                 isFull 
-                  ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' 
-                  : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/20'
+                  ? 'bg-slate-200 dark:bg-slate-800 text-slate-400 cursor-not-allowed' 
+                  : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/20 hover:scale-105'
               }`}
             >
               {isFull ? 'Full' : 'RSVP Now'}
