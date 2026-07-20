@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Search, User as UserIcon, Ticket, LogOut, Sparkles, Shield, Trophy } from 'lucide-react';
+import { Calendar, Search, User as UserIcon, Ticket, LogOut, Sparkles, Shield, Trophy, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ProfileModal } from './ProfileModal';
 import { LeaderboardModal } from './LeaderboardModal';
@@ -12,28 +12,28 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSearch }) => {
-  const { user, logout, openAuthModal } = useAuth();
+  const { user, logout, openAuthModal, theme, toggleTheme } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const isAdminOrCoordinator = user && (user.role === 'admin' || user.role === 'coordinator');
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-[#090d16]/80 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+      <header className="sticky top-0 z-40 bg-white/90 dark:bg-[#090d16]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           {/* Brand Logo */}
           <div 
             onClick={() => setCurrentTab('discovery')} 
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-2.5 cursor-pointer group"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:scale-110 transition-transform duration-300 border border-white/20">
-              <Sparkles className="w-5 h-5 text-amber-300 fill-amber-300 animate-pulse" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+              <Sparkles className="w-5 h-5 text-amber-300 fill-amber-300" />
             </div>
             <div>
-              <span className="text-2xl font-black tracking-tight font-heading bg-gradient-to-r from-white via-sky-200 to-indigo-300 bg-clip-text text-transparent">
+              <span className="text-xl font-extrabold tracking-tight font-heading text-slate-900 dark:text-white">
                 DiGi Campus
               </span>
-              <span className="hidden sm:inline-block ml-2 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-500/20 text-sky-400 border border-blue-500/30">
+              <span className="hidden sm:inline-block ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
                 Portal
               </span>
             </div>
@@ -49,18 +49,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
               onFocus={() => {
                 if (currentTab !== 'search') setCurrentTab('search');
               }}
-              className="w-full pl-10 pr-4 py-2 bg-slate-900/80 border border-white/10 rounded-2xl text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder-slate-400 shadow-inner"
+              className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-900 border border-transparent rounded-full text-xs focus:outline-none focus:border-blue-600 text-slate-900 dark:text-white placeholder-slate-400 transition-colors"
             />
           </div>
 
           {/* Nav Links */}
-          <nav className="flex items-center gap-1.5 sm:gap-2">
+          <nav className="flex items-center gap-1 sm:gap-2">
             <button
               onClick={() => setCurrentTab('discovery')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                 currentTab === 'discovery' 
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30 scale-105' 
-                  : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                  ? 'bg-blue-600 text-white shadow-md' 
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               <Calendar className="w-4 h-4" />
@@ -69,10 +69,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
 
             <button
               onClick={() => setCurrentTab('search')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                 currentTab === 'search' 
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30 scale-105' 
-                  : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                  ? 'bg-blue-600 text-white shadow-md' 
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               <Search className="w-4 h-4" />
@@ -87,10 +87,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
                   setCurrentTab('dashboard');
                 }
               }}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                 currentTab === 'dashboard' 
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30 scale-105' 
-                  : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                  ? 'bg-blue-600 text-white shadow-md' 
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               <Ticket className="w-4 h-4" />
@@ -100,9 +100,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
             {/* Leaderboard XP Button */}
             <button
               onClick={() => setLeaderboardOpen(true)}
-              className="px-3.5 py-2 rounded-xl text-xs font-black text-amber-300 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 transition-all flex items-center gap-1.5 hover:scale-105 active:scale-95 shadow-sm"
+              className="px-3 py-2 rounded-xl text-xs font-extrabold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 border border-amber-300 dark:border-amber-800 transition-all flex items-center gap-1.5"
             >
-              <Trophy className="w-4 h-4 text-amber-400 fill-amber-400" />
+              <Trophy className="w-4 h-4 text-amber-500 fill-amber-400" />
               <span className="hidden sm:inline">XP Ranks</span>
             </button>
 
@@ -110,10 +110,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
             {isAdminOrCoordinator && (
               <button
                 onClick={() => setCurrentTab('admin')}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                   currentTab === 'admin' 
-                    ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30 scale-105' 
-                    : 'bg-purple-500/20 text-purple-300 hover:bg-purple-600 hover:text-white border border-purple-500/30'
+                    ? 'bg-purple-600 text-white shadow-md' 
+                    : 'bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 hover:bg-purple-100 border border-purple-200 dark:border-purple-800'
                 }`}
               >
                 <Shield className="w-4 h-4" />
@@ -121,28 +121,37 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
               </button>
             )}
 
+            {/* Light / Dark Mode Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+              className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+            >
+              {theme === 'light' ? <Moon className="w-4 h-4 text-slate-700" /> : <Sun className="w-4 h-4 text-amber-400" />}
+            </button>
+
             {/* User Profile / Auth Area */}
             {user ? (
               <div className="flex items-center gap-2 ml-1">
                 <div 
                   onClick={() => setProfileOpen(true)}
-                  className="flex items-center gap-2 cursor-pointer p-1 rounded-2xl hover:bg-white/10 transition-colors group"
+                  className="flex items-center gap-2 cursor-pointer p-1 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"
                 >
                   <img
                     src={user.avatar}
                     alt={user.name}
-                    className="w-8 h-8 rounded-xl object-cover border-2 border-blue-500/50 group-hover:border-blue-400 transition-colors shadow-md"
+                    className="w-8 h-8 rounded-xl object-cover border-2 border-blue-600 shadow-sm"
                   />
                   <div className="hidden lg:block text-left pr-1">
-                    <span className="block text-xs font-extrabold text-white leading-tight line-clamp-1">{user.name}</span>
-                    <span className="block text-[10px] text-sky-400 font-semibold uppercase">{user.role}</span>
+                    <span className="block text-xs font-extrabold text-slate-900 dark:text-white leading-tight line-clamp-1">{user.name}</span>
+                    <span className="block text-[10px] text-blue-600 dark:text-blue-400 font-bold uppercase">{user.role}</span>
                   </div>
                 </div>
 
                 <button
                   onClick={logout}
                   title="Sign Out"
-                  className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-colors"
+                  className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-xl transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
@@ -150,7 +159,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
             ) : (
               <button
                 onClick={() => openAuthModal('login')}
-                className="ml-1 px-4 py-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-blue-500/25 transition-all flex items-center gap-1.5 hover:scale-105 active:scale-95"
+                className="ml-1 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md transition-all flex items-center gap-1.5"
               >
                 <UserIcon className="w-4 h-4" />
                 <span>Login</span>

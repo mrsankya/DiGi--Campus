@@ -20,40 +20,40 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, onQuickReg
   const fillPercentage = Math.round((event.registeredCount / event.capacity) * 100);
 
   const categoryColors: Record<string, string> = {
-    Tech: 'bg-blue-500/20 text-blue-400 border-blue-500/40',
-    Cultural: 'bg-purple-500/20 text-purple-400 border-purple-500/40',
-    Sports: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40',
-    Academic: 'bg-amber-500/20 text-amber-400 border-amber-500/40',
-    Workshop: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/40',
-    Seminar: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/40'
+    Tech: 'bg-blue-600 text-white',
+    Cultural: 'bg-purple-600 text-white',
+    Sports: 'bg-emerald-600 text-white',
+    Academic: 'bg-amber-600 text-white',
+    Workshop: 'bg-indigo-600 text-white',
+    Seminar: 'bg-cyan-600 text-white'
   };
 
   return (
     <div 
       onClick={onClick}
-      className="group glass-card glass-card-hover rounded-3xl overflow-hidden flex flex-col cursor-pointer border border-white/10 relative"
+      className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden flex flex-col cursor-pointer hover:shadow-xl hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-1"
     >
       {/* Image Banner */}
-      <div className="relative h-52 w-full overflow-hidden bg-slate-900">
+      <div className="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-950">
         <img
           src={event.image}
           alt={event.title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         
         {/* Category Pill */}
-        <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider backdrop-blur-md border ${categoryColors[event.category] || 'bg-slate-800/80 text-white border-white/20'}`}>
+        <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md ${categoryColors[event.category] || 'bg-slate-800 text-white'}`}>
           {event.category}
         </span>
 
         {/* Price Tag */}
-        <span className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-black bg-black/60 backdrop-blur-md text-emerald-400 border border-emerald-500/30 shadow-md">
+        <span className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-black bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-md border border-slate-200 dark:border-slate-800">
           {event.price === 0 ? 'FREE ENTRY' : `$${event.price}`}
         </span>
 
         {/* Date badge */}
-        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-slate-200 text-xs font-semibold bg-black/50 px-3 py-1 rounded-xl backdrop-blur-md border border-white/10">
+        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-white text-xs font-semibold bg-black/60 px-3 py-1 rounded-xl backdrop-blur-md">
           <Calendar className="w-3.5 h-3.5 text-sky-400" />
           <span>{formattedDate}</span>
           <span className="opacity-75">• {event.time}</span>
@@ -63,44 +63,44 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, onQuickReg
       {/* Content */}
       <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
         <div>
-          <h3 className="text-lg font-black text-white group-hover:text-sky-400 transition-colors line-clamp-2 leading-snug font-heading">
+          <h3 className="text-lg font-black text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug font-heading">
             {event.title}
           </h3>
-          <p className="text-xs text-slate-300 mt-2 line-clamp-2 leading-relaxed font-normal">
+          <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 line-clamp-2 leading-relaxed font-normal">
             {event.description}
           </p>
         </div>
 
         {/* Seat Fill Progress Bar */}
         <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400">
+          <div className="flex items-center justify-between text-[11px] font-bold text-slate-600 dark:text-slate-400">
             <span className="flex items-center gap-1">
-              <Users className="w-3.5 h-3.5 text-indigo-400" /> {event.registeredCount} / {event.capacity} Registered
+              <Users className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" /> {event.registeredCount} / {event.capacity} Registered
             </span>
             {spotsLeft > 0 ? (
-              <span className="text-emerald-400 font-bold">{spotsLeft} seats left</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-bold">{spotsLeft} seats left</span>
             ) : (
-              <span className="text-rose-400 font-bold">Housefull</span>
+              <span className="text-rose-600 dark:text-rose-400 font-bold">Housefull</span>
             )}
           </div>
-          <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+          <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-500"
+              className="h-full bg-blue-600 rounded-full transition-all duration-500"
               style={{ width: `${Math.min(fillPercentage, 100)}%` }}
             />
           </div>
         </div>
 
         {/* Location Specs */}
-        <div className="flex items-center gap-1.5 text-xs text-slate-400 pt-2 border-t border-white/10">
-          <MapPin className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+        <div className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <MapPin className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
           <span className="truncate">{event.location}</span>
         </div>
 
         {/* Footer Actions */}
         <div className="pt-2 flex items-center justify-between gap-2">
-          <span className="text-xs font-bold text-sky-400 flex items-center gap-1 group-hover:translate-x-1.5 transition-transform">
-            View Pass Details <ArrowRight className="w-3.5 h-3.5" />
+          <span className="text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+            View Details <ArrowRight className="w-3.5 h-3.5" />
           </span>
 
           {onQuickRegister && (
@@ -110,10 +110,10 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, onQuickReg
                 onQuickRegister(event);
               }}
               disabled={isFull}
-              className={`px-4 py-2 rounded-xl text-xs font-black shadow-md transition-all flex items-center gap-1 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold shadow-sm transition-all ${
                 isFull 
-                  ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-white/5' 
-                  : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-blue-500/20 hover:scale-105 active:scale-95'
+                  ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' 
+                  : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/20'
               }`}
             >
               {isFull ? 'Full' : 'RSVP Now'}

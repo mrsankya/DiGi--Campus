@@ -12,6 +12,8 @@ interface AuthContextType {
   closeAuthModal: () => void;
   authModalOpen: boolean;
   authModalMode: 'login' | 'register';
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,6 +23,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
+  
+  // Theme state (default: light mode for maximum readability)
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    return (localStorage.getItem('campuspulse_theme') as 'light' | 'dark') || 'light';
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('campuspulse_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('campuspulse_token');
@@ -73,7 +94,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       openAuthModal,
       closeAuthModal,
       authModalOpen,
-      authModalMode
+      authModalMode,
+      theme,
+      toggleTheme
     }}>
       {children}
     </AuthContext.Provider>
