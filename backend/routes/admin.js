@@ -44,6 +44,50 @@ router.get('/analytics', async (req, res) => {
   }
 });
 
+// Live QR Scanner Check-in Endpoint
+router.post('/scan-qr', async (req, res) => {
+  try {
+    const { ticketCode, registrationId } = req.body;
+    if (!ticketCode && !registrationId) {
+      return res.status(400).json({ message: 'Ticket Code or Registration ID is required' });
+    }
+
+    let query = {};
+    if (ticketCode) query.ticketCode = ticketCode.trim();
+    if (registrationId) query._id = registrationId.trim();
+
+    const registration = await Registration.findOne(query)
+      .populate('userId', 'name email department studentId avatar')
+      .populate('eventId', 'title date time location category');
+
+    if (!registration) {
+      return res.status(404).json({ message: 'Invalid Ticket QR Code! Registration record not found.' });
+    }
+
+    // Mark attendance
+    registration.attendanceStatus = 'Present';
+    registration.certificateIssued = true;
+    await registration.save();
+
+    res.json({
+      success: true,
+      message: `Verified! ${registration.userId.name} checked in successfully.`,
+      studentName: registration.userId.name,
+      studentEmail: registration.userId.email,
+      studentId: registration.userId.studentId,
+      department: registration.userId.department,
+      avatar: registration.userId.avatar,
+      eventTitle: registration.eventId.title,
+      eventDate: registration.eventId.date,
+      ticketCode: registration.ticketCode,
+      attendanceStatus: 'Present'
+    });
+  } catch (err) {
+    console.error('Scan QR error:', err);
+    res.status(500).json({ message: 'Error scanning QR ticket code', error: err.message });
+  }
+});
+
 // Get Participant Roster for an Event
 router.get('/events/:eventId/participants', async (req, res) => {
   try {
