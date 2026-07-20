@@ -135,7 +135,7 @@ export const SearchEventsPage: React.FC<SearchEventsPageProps> = ({
                 <EventCard
                   key={event._id}
                   event={event}
-                  onSelect={onSelectEvent}
+                  onClick={() => onSelectEvent(event)}
                   onQuickRegister={onQuickRegister}
                 />
               ))}
