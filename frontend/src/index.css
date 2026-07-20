@@ -20,13 +20,71 @@ body {
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-html.dark body {
-  background-color: #090d16;
-  color: #f8fafc;
-}
-
 h1, h2, h3, h4, .font-heading {
   font-family: var(--font-outfit);
+}
+
+/* GLOBAL DARK MODE OVERRIDES FOR HIGH-CONTRAST VISIBILITY */
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #090d16 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .text-\[\#191b23\],
+html.dark .text-slate-900,
+html.dark .text-slate-800 {
+  color: #f8fafc !important;
+}
+
+html.dark .text-\[\#434655\],
+html.dark .text-slate-700,
+html.dark .text-slate-600 {
+  color: #e2e8f0 !important;
+}
+
+html.dark .text-\[\#737686\],
+html.dark .text-slate-500 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .bg-white {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+html.dark .bg-\[\#faf8ff\],
+html.dark .bg-slate-50 {
+  background-color: #090d16 !important;
+}
+
+html.dark .bg-\[\#f3f3fe\],
+html.dark .bg-\[\#ededf9\],
+html.dark .bg-slate-100 {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #475569 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+html.dark .border-\[\#e1e2ed\],
+html.dark .border-\[\#f3f3fe\],
+html.dark .border-slate-200 {
+  border-color: #334155 !important;
 }
 
 /* Animations */
