@@ -9,6 +9,9 @@ const bcrypt = require('bcryptjs');
 // Protect all admin endpoints for coordinators and admins
 router.use(auth, authorizeRoles('admin', 'coordinator'));
 
+// Primary Root Super Admin Emails (Immune to demotion or deactivation)
+const ROOT_SUPER_ADMIN_EMAILS = ['mr.sankya@digicampus.edu', 'mr.sankya@campuspulse.edu'];
+
 // Analytics Summary Dashboard Data
 router.get('/analytics', async (req, res) => {
   try {
@@ -93,37 +96,47 @@ router.get('/users', async (req, res) => {
   }
 });
 
-// Update user role & position (Admin only)
+// Update user role & position (Strict protection for Root Super Admin)
 router.put('/users/:id/role', authorizeRoles('admin'), async (req, res) => {
   try {
     const { role, position } = req.body;
-    const user = await User.findById(req.params.id);
-    if (!user) {
+    const targetUser = await User.findById(req.params.id);
+    if (!targetUser) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    if (role) user.role = role;
-    if (position) user.position = position;
+    // Protection: Prevent demoting Root Super Admin
+    if (ROOT_SUPER_ADMIN_EMAILS.includes(targetUser.email.toLowerCase())) {
+      return res.status(403).json({ message: 'Forbidden: Primary Super Admin account role cannot be modified or demoted.' });
+    }
 
-    await user.save();
-    res.json(user);
+    if (role) targetUser.role = role;
+    if (position) targetUser.position = position;
+
+    await targetUser.save();
+    res.json(targetUser);
   } catch (err) {
     res.status(500).json({ message: 'Error updating user role' });
   }
 });
 
-// Toggle User Status (active / deactivated)
+// Toggle User Status (active / deactivated) - Root Super Admin Protection
 router.put('/users/:id/status', authorizeRoles('admin'), async (req, res) => {
   try {
     const { status } = req.body;
-    const user = await User.findById(req.params.id);
-    if (!user) {
+    const targetUser = await User.findById(req.params.id);
+    if (!targetUser) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    user.status = status;
-    await user.save();
-    res.json(user);
+    // Protection: Prevent deactivating Root Super Admin
+    if (ROOT_SUPER_ADMIN_EMAILS.includes(targetUser.email.toLowerCase())) {
+      return res.status(403).json({ message: 'Forbidden: Primary Super Admin account cannot be deactivated.' });
+    }
+
+    targetUser.status = status;
+    await targetUser.save();
+    res.json(targetUser);
   } catch (err) {
     res.status(500).json({ message: 'Error updating user status' });
   }
@@ -137,16 +150,21 @@ router.post('/users/:id/reset-password', authorizeRoles('admin'), async (req, re
       return res.status(400).json({ message: 'Password must be at least 6 characters' });
     }
 
-    const user = await User.findById(req.params.id);
-    if (!user) {
+    const targetUser = await User.findById(req.params.id);
+    if (!targetUser) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(newPassword, salt);
-    await user.save();
+    // Protection: Only allow Root Super Admin to reset Root Super Admin password
+    if (ROOT_SUPER_ADMIN_EMAILS.includes(targetUser.email.toLowerCase()) && req.user.email.toLowerCase() !== targetUser.email.toLowerCase()) {
+      return res.status(403).json({ message: 'Forbidden: Only the Primary Owner can reset the Super Admin password.' });
+    }
 
-    res.json({ message: `Password reset successfully for ${user.name}` });
+    const salt = await bcrypt.genSalt(10);
+    targetUser.password = await bcrypt.hash(newPassword, salt);
+    await targetUser.save();
+
+    res.json({ message: `Password reset successfully for ${targetUser.name}` });
   } catch (err) {
     res.status(500).json({ message: 'Error resetting password' });
   }
