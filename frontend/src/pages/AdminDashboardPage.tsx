@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, Calendar, Edit, Trash2, PlusCircle, Shield, Megaphone, Lock, Crown } from 'lucide-react';
+import { BarChart3, Calendar, Edit, Trash2, PlusCircle, Shield, Megaphone, Lock, Crown, QrCode } from 'lucide-react';
 import { api } from '../services/api';
 import type { EventItem, User, Announcement } from '../services/api';
 import { EditEventModal } from '../components/EditEventModal';
 import { ParticipantRosterModal } from '../components/ParticipantRosterModal';
+import { QRScannerModal } from '../components/QRScannerModal';
 
 interface AdminDashboardPageProps {
   onEventCreatedOrUpdated: () => void;
@@ -22,6 +23,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onEventC
   // Modals
   const [selectedEditEvent, setSelectedEditEvent] = useState<EventItem | null>(null);
   const [selectedRosterEvent, setSelectedRosterEvent] = useState<EventItem | null>(null);
+  const [isQrScannerOpen, setIsQrScannerOpen] = useState(false);
   const [resetPasswordUserId, setResetPasswordUserId] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState('');
 
@@ -144,6 +146,12 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onEventC
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsQrScannerOpen(true)}
+            className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md flex items-center gap-1.5 transition-all"
+          >
+            <QrCode className="w-4 h-4" /> 📷 Live Ticket QR Scanner
+          </button>
           <button
             onClick={onOpenCreateModal}
             className="px-4 py-2.5 rounded-xl bg-[#2563eb] hover:bg-[#004ac6] text-white text-xs font-bold shadow-md flex items-center gap-1.5 transition-all"
@@ -565,6 +573,12 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onEventC
           </form>
         </div>
       )}
+      {/* Live QR Code Scanner Modal */}
+      <QRScannerModal
+        isOpen={isQrScannerOpen}
+        onClose={() => setIsQrScannerOpen(false)}
+        onCheckInSuccess={() => loadAdminData()}
+      />
     </div>
   );
 };

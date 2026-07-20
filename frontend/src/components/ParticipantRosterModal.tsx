@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, Download, Printer, CheckCircle2, XCircle, Search } from 'lucide-react';
+import { X, Download, Printer, CheckCircle2, XCircle, Search, QrCode } from 'lucide-react';
 import { api } from '../services/api';
 import type { EventItem, Registration } from '../services/api';
+import { QRScannerModal } from './QRScannerModal';
 
 interface ParticipantRosterModalProps {
   event: EventItem | null;
@@ -13,6 +14,7 @@ export const ParticipantRosterModal: React.FC<ParticipantRosterModalProps> = ({ 
   const [participants, setParticipants] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [isQrScannerOpen, setIsQrScannerOpen] = useState(false);
 
   const fetchRoster = async () => {
     if (!event) return;
@@ -65,6 +67,12 @@ export const ParticipantRosterModal: React.FC<ParticipantRosterModalProps> = ({ 
           </div>
 
           <div className="flex items-center gap-2 print:hidden">
+            <button
+              onClick={() => setIsQrScannerOpen(true)}
+              className="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all"
+            >
+              <QrCode className="w-4 h-4" /> Live QR Scanner
+            </button>
             <button
               onClick={() => api.exportParticipantsCSV(event.title, participants)}
               className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all"
@@ -185,6 +193,13 @@ export const ParticipantRosterModal: React.FC<ParticipantRosterModalProps> = ({ 
           )}
         </div>
       </div>
+
+      {/* QR Scanner Modal */}
+      <QRScannerModal
+        isOpen={isQrScannerOpen}
+        onClose={() => setIsQrScannerOpen(false)}
+        onCheckInSuccess={() => fetchRoster()}
+      />
     </div>
   );
 };

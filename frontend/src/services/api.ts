@@ -247,6 +247,15 @@ export const api = {
   },
 
   // Admin & Analytics
+  async scanQrTicket(ticketCode: string): Promise<any> {
+    const res = await fetch(`${API_BASE}/admin/scan-qr`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ ticketCode })
+    });
+    return await parseResponse(res);
+  },
+
   async getAnalytics() {
     const res = await fetch(`${API_BASE}/admin/analytics`, {
       headers: getAuthHeaders()
