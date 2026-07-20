@@ -19,7 +19,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors shadow-sm">
+      <header className="sticky top-0 z-40 bg-white dark:bg-[#090d16] border-b border-slate-200 dark:border-slate-800 transition-colors shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           {/* Brand Logo */}
           <div 
@@ -49,18 +49,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
               onFocus={() => {
                 if (currentTab !== 'search') setCurrentTab('search');
               }}
-              className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-full text-sm focus:outline-none focus:border-blue-600 text-slate-900 dark:text-white placeholder-slate-500 transition-colors"
+              className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-full text-xs focus:outline-none focus:border-blue-600 text-slate-900 dark:text-white placeholder-slate-500 transition-colors"
             />
           </div>
 
           {/* Nav Links */}
-          <nav className="flex items-center gap-1.5 sm:gap-2">
+          <nav className="flex items-center gap-1 sm:gap-2">
             <button
               onClick={() => setCurrentTab('discovery')}
-              className={`px-3 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                 currentTab === 'discovery' 
                   ? 'bg-blue-600 text-white shadow-md' 
-                  : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               <Calendar className="w-4 h-4" />
@@ -69,10 +69,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
 
             <button
               onClick={() => setCurrentTab('search')}
-              className={`px-3 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                 currentTab === 'search' 
                   ? 'bg-blue-600 text-white shadow-md' 
-                  : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               <Search className="w-4 h-4" />
@@ -87,10 +87,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
                   setCurrentTab('dashboard');
                 }
               }}
-              className={`px-3 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                 currentTab === 'dashboard' 
                   ? 'bg-blue-600 text-white shadow-md' 
-                  : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               <Ticket className="w-4 h-4" />
@@ -100,7 +100,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
             {/* Leaderboard XP Button */}
             <button
               onClick={() => setLeaderboardOpen(true)}
-              className="px-3 py-2 rounded-xl text-sm font-extrabold text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/60 hover:bg-amber-200 border border-amber-300 dark:border-amber-700 transition-all flex items-center gap-1.5"
+              className="px-3 py-2 rounded-xl text-xs font-extrabold text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/60 hover:bg-amber-200 border border-amber-300 dark:border-amber-700 transition-all flex items-center gap-1.5"
             >
               <Trophy className="w-4 h-4 text-amber-600 fill-amber-400" />
               <span className="hidden sm:inline">XP Ranks</span>
@@ -110,7 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
             {isAdminOrCoordinator && (
               <button
                 onClick={() => setCurrentTab('admin')}
-                className={`px-3 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                   currentTab === 'admin' 
                     ? 'bg-purple-600 text-white shadow-md' 
                     : 'bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 hover:bg-purple-200 border border-purple-300 dark:border-purple-800'
@@ -121,21 +121,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
               </button>
             )}
 
-            {/* PROMINENT LIGHT / DARK MODE TOGGLE BUTTON */}
+            {/* SLEEK SUN / MOON THEME TOGGLE BUTTON */}
             <button
               onClick={toggleTheme}
-              className="px-3 py-2 rounded-xl text-xs font-black border transition-all flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 shadow-xs"
+              title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+              className="p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-amber-300 hover:scale-105 active:scale-95 transition-all shadow-xs flex items-center justify-center"
             >
               {theme === 'light' ? (
-                <>
-                  <Moon className="w-4 h-4 text-slate-800" />
-                  <span>Dark Mode</span>
-                </>
+                <Moon className="w-4 h-4 text-slate-800 fill-slate-800" />
               ) : (
-                <>
-                  <Sun className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  <span>Light Mode</span>
-                </>
+                <Sun className="w-4 h-4 text-amber-400 fill-amber-400" />
               )}
             </button>
 
