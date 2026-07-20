@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, Calendar, Edit, Trash2, PlusCircle, Shield, Megaphone } from 'lucide-react';
+import { BarChart3, Calendar, Edit, Trash2, PlusCircle, Shield, Megaphone, Lock, Crown } from 'lucide-react';
 import { api } from '../services/api';
 import type { EventItem, User, Announcement } from '../services/api';
 import { EditEventModal } from '../components/EditEventModal';
@@ -32,6 +32,8 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onEventC
 
   // Filter
   const [eventStatusFilter, setEventStatusFilter] = useState('All');
+
+  const ROOT_SUPER_ADMIN_EMAILS = ['mr.sankya@digicampus.edu', 'mr.sankya@campuspulse.edu'];
 
   const loadAdminData = async () => {
     try {
@@ -357,62 +359,85 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onEventC
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#f3f3fe]">
-                  {users.map((u) => (
-                    <tr key={u._id || u.id} className="hover:bg-[#f3f3fe]/50 transition-colors">
-                      <td className="py-3.5 px-4 font-bold text-[#191b23]">
-                        <div className="flex items-center gap-3">
-                          <img src={u.avatar} alt={u.name} className="w-8 h-8 rounded-full object-cover border" />
-                          <div>
-                            <div>{u.name}</div>
-                            <div className="text-[10px] text-[#737686] font-normal">{u.email}</div>
+                  {users.map((u) => {
+                    const isRootSuperAdmin = ROOT_SUPER_ADMIN_EMAILS.includes(u.email.toLowerCase());
+
+                    return (
+                      <tr key={u._id || u.id} className="hover:bg-[#f3f3fe]/50 transition-colors">
+                        <td className="py-3.5 px-4 font-bold text-[#191b23]">
+                          <div className="flex items-center gap-3">
+                            <img src={u.avatar} alt={u.name} className="w-8 h-8 rounded-full object-cover border" />
+                            <div>
+                              <div className="flex items-center gap-1.5">
+                                <span>{u.name}</span>
+                                {isRootSuperAdmin && (
+                                  <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-400/20 text-amber-800 border border-amber-300 flex items-center gap-1">
+                                    <Crown className="w-3 h-3 text-amber-600 fill-amber-500" /> Primary Owner
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[10px] text-[#737686] font-normal">{u.email}</div>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <select
-                          value={u.role}
-                          onChange={(e) => handleUpdateRole(u._id || u.id!, e.target.value, u.position || '')}
-                          className="px-2 py-1 bg-[#f3f3fe] border border-[#c3c6d7] rounded-lg text-xs font-bold text-[#004ac6]"
-                        >
-                          <option value="student">Student</option>
-                          <option value="coordinator">Event Coordinator</option>
-                          <option value="admin">Super Admin</option>
-                        </select>
-                        <div className="text-[10px] text-[#737686] mt-0.5">{u.position || 'Student Member'}</div>
-                      </td>
-                      <td className="py-3.5 px-4 text-[#434655]">
-                        <div>{u.department}</div>
-                        <div className="text-[10px] text-[#737686] font-mono">{u.studentId}</div>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          u.status === 'deactivated' ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800'
-                        }`}>
-                          {u.status || 'active'}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => setResetPasswordUserId(u._id || u.id!)}
-                            className="px-2.5 py-1 rounded-lg bg-[#eeefff] text-[#004ac6] hover:bg-[#004ac6] hover:text-white font-bold text-[11px] transition-colors"
-                          >
-                            Reset Password
-                          </button>
-                          <button
-                            onClick={() => handleToggleUserStatus(u._id || u.id!, u.status || 'active')}
-                            className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors ${
-                              u.status === 'deactivated'
-                                ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white'
-                                : 'bg-rose-50 text-rose-700 hover:bg-rose-600 hover:text-white'
-                            }`}
-                          >
-                            {u.status === 'deactivated' ? 'Activate' : 'Deactivate'}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          {isRootSuperAdmin ? (
+                            <div className="flex items-center gap-1 px-2.5 py-1 bg-amber-50 border border-amber-200 rounded-lg text-amber-900 font-extrabold text-xs w-fit">
+                              <Lock className="w-3 h-3 text-amber-600" /> Primary Super Admin
+                            </div>
+                          ) : (
+                            <select
+                              value={u.role}
+                              onChange={(e) => handleUpdateRole(u._id || u.id!, e.target.value, u.position || '')}
+                              className="px-2 py-1 bg-[#f3f3fe] border border-[#c3c6d7] rounded-lg text-xs font-bold text-[#004ac6]"
+                            >
+                              <option value="student">Student</option>
+                              <option value="coordinator">Event Coordinator</option>
+                              <option value="admin">Admin / Organizer</option>
+                            </select>
+                          )}
+                          <div className="text-[10px] text-[#737686] mt-0.5">{u.position || 'Student Member'}</div>
+                        </td>
+                        <td className="py-3.5 px-4 text-[#434655]">
+                          <div>{u.department}</div>
+                          <div className="text-[10px] text-[#737686] font-mono">{u.studentId}</div>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            u.status === 'deactivated' ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800'
+                          }`}>
+                            {u.status || 'active'}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-right">
+                          {isRootSuperAdmin ? (
+                            <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded-md border border-amber-200">
+                              Protected Owner Account
+                            </span>
+                          ) : (
+                            <div className="flex items-center justify-end gap-2">
+                              <button
+                                onClick={() => setResetPasswordUserId(u._id || u.id!)}
+                                className="px-2.5 py-1 rounded-lg bg-[#eeefff] text-[#004ac6] hover:bg-[#004ac6] hover:text-white font-bold text-[11px] transition-colors"
+                              >
+                                Reset Password
+                              </button>
+                              <button
+                                onClick={() => handleToggleUserStatus(u._id || u.id!, u.status || 'active')}
+                                className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors ${
+                                  u.status === 'deactivated'
+                                    ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white'
+                                    : 'bg-rose-50 text-rose-700 hover:bg-rose-600 hover:text-white'
+                                }`}
+                              >
+                                {u.status === 'deactivated' ? 'Activate' : 'Deactivate'}
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
