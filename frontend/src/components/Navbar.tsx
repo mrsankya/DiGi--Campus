@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Calendar, Search, User as UserIcon, PlusCircle, Ticket, LogOut, Sparkles, Shield } from 'lucide-react';
+import { Calendar, Search, User as UserIcon, PlusCircle, Ticket, LogOut, Sparkles, Shield, Trophy } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ProfileModal } from './ProfileModal';
+import { LeaderboardModal } from './LeaderboardModal';
 
 interface NavbarProps {
   currentTab: 'discovery' | 'search' | 'dashboard' | 'admin';
@@ -13,6 +14,7 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, openCreateModal, onSearch }) => {
   const { user, logout, openAuthModal } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const isAdminOrCoordinator = user && (user.role === 'admin' || user.role === 'coordinator');
 
   return (
@@ -95,6 +97,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, openC
               <span className="hidden sm:inline">My Passes</span>
             </button>
 
+            {/* Leaderboard XP Button */}
+            <button
+              onClick={() => setLeaderboardOpen(true)}
+              className="px-3 py-2 rounded-lg text-sm font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-300 transition-colors flex items-center gap-1.5"
+            >
+              <Trophy className="w-4 h-4 text-amber-600 fill-amber-400" />
+              <span className="hidden sm:inline">XP Ranks</span>
+            </button>
+
             {/* Admin & Coordinator Console Button */}
             {isAdminOrCoordinator && (
               <button
@@ -167,6 +178,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, openC
       <ProfileModal
         isOpen={profileOpen}
         onClose={() => setProfileOpen(false)}
+      />
+
+      {/* Campus Leaderboard XP Modal */}
+      <LeaderboardModal
+        isOpen={leaderboardOpen}
+        onClose={() => setLeaderboardOpen(false)}
       />
     </>
   );

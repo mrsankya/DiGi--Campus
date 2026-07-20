@@ -14,6 +14,9 @@ export interface User {
   github?: string;
   linkedin?: string;
   status?: 'active' | 'deactivated';
+  xpPoints?: number;
+  level?: number;
+  badges?: string[];
 }
 
 export interface AgendaItem {
@@ -222,6 +225,11 @@ export const api = {
   },
 
   // Registrations
+  async getLeaderboard(): Promise<User[]> {
+    const res = await fetch(`${API_BASE}/registrations/leaderboard`);
+    return await parseResponse(res);
+  },
+
   async registerForEvent(eventId: string): Promise<Registration> {
     const res = await fetch(`${API_BASE}/registrations`, {
       method: 'POST',
