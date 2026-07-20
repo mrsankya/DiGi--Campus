@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { X, Edit2, Globe, Link as LinkIcon } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Edit2, Globe, Link as LinkIcon, Camera, Upload } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 
@@ -11,6 +11,7 @@ interface ProfileModalProps {
 export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form fields
   const [name, setName] = useState('');
@@ -41,6 +42,43 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
 
   if (!isOpen || !user) return null;
 
+  // WhatsApp-style file picker & image compressor
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setError('Please select a valid image file');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        // Compress image to 200x200 canvas
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const size = 200;
+        canvas.width = size;
+        canvas.height = size;
+
+        if (ctx) {
+          // Crop square center
+          const minDim = Math.min(img.width, img.height);
+          const sx = (img.width - minDim) / 2;
+          const sy = (img.height - minDim) / 2;
+
+          ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          setAvatar(compressedDataUrl);
+        }
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -59,7 +97,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
         linkedin
       });
 
-      // Reload window to update auth state cleanly
+      // Reload window to reflect updated profile across components
       window.location.reload();
       setIsEditing(false);
     } catch (err: any) {
@@ -72,6 +110,15 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
       <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl border border-[#e1e2ed] overflow-hidden relative max-h-[90vh] flex flex-col">
+        {/* Hidden File Input */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept="image/*"
+          onChange={handleImageFileChange}
+          className="hidden"
+        />
+
         {/* Header Banner */}
         <div className="bg-gradient-to-r from-[#004ac6] to-[#2563eb] p-6 text-white relative">
           <button
@@ -82,13 +129,18 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
           </button>
 
           <div className="flex items-center gap-5">
-            <div className="relative group">
+            {/* Avatar Photo Container (WhatsApp Style Click-to-Upload) */}
+            <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
               <img
                 src={avatar || user.avatar}
                 alt={user.name}
-                className="w-20 h-20 rounded-2xl object-cover border-2 border-white/40 shadow-xl"
+                className="w-20 h-20 rounded-full object-cover border-2 border-white/40 shadow-xl group-hover:opacity-85 transition-opacity"
               />
+              <div className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <Camera className="w-6 h-6 text-white" />
+              </div>
             </div>
+
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-2xl font-black">{user.name}</h2>
@@ -115,12 +167,20 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
             <div className="space-y-6">
               <div className="flex items-center justify-between border-b border-[#e1e2ed] pb-4">
                 <h3 className="text-sm font-bold text-[#191b23]">Personal Profile Information</h3>
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="px-3.5 py-1.5 rounded-xl bg-[#eeefff] text-[#004ac6] hover:bg-[#004ac6] hover:text-white text-xs font-bold transition-colors flex items-center gap-1.5"
-                >
-                  <Edit2 className="w-3.5 h-3.5" /> Edit Profile
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-3 py-1.5 rounded-xl bg-white border border-[#c3c6d7] text-[#191b23] hover:border-[#004ac6] hover:text-[#004ac6] text-xs font-bold transition-colors flex items-center gap-1.5"
+                  >
+                    <Upload className="w-3.5 h-3.5" /> Upload Photo
+                  </button>
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="px-3.5 py-1.5 rounded-xl bg-[#eeefff] text-[#004ac6] hover:bg-[#004ac6] hover:text-white text-xs font-bold transition-colors flex items-center gap-1.5"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" /> Edit Profile
+                  </button>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[#434655]">
@@ -201,6 +261,25 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                 </button>
               </div>
 
+              {/* Avatar Upload Button in Form */}
+              <div className="flex items-center gap-4 p-3 rounded-2xl bg-[#f3f3fe]">
+                <img
+                  src={avatar || user.avatar}
+                  alt="Avatar Preview"
+                  className="w-14 h-14 rounded-full object-cover border-2 border-[#004ac6]"
+                />
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-3.5 py-1.5 rounded-xl bg-[#004ac6] text-white text-xs font-bold shadow-sm flex items-center gap-1.5"
+                  >
+                    <Camera className="w-3.5 h-3.5" /> Upload Photo from Device
+                  </button>
+                  <span className="text-[10px] text-[#737686] block mt-1">Supports PNG, JPG, JPEG, WEBP files</span>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-[#191b23] mb-1">Full Name *</label>
@@ -266,17 +345,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                     <option value="Postgraduate / Faculty">Postgraduate / Faculty</option>
                   </select>
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#191b23] mb-1">Avatar Picture URL</label>
-                <input
-                  type="url"
-                  placeholder="https://images.unsplash.com/..."
-                  value={avatar}
-                  onChange={(e) => setAvatar(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#f3f3fe] border border-transparent rounded-xl text-xs focus:outline-none focus:border-[#004ac6] text-[#191b23]"
-                />
               </div>
 
               <div>
