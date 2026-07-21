@@ -95,7 +95,18 @@ async function sendWelcomeEmail({ toEmail, name, role, department, studentId }) 
  * Send Security Alert Email on Account Login / Sign In
  */
 async function sendLoginNotificationEmail({ toEmail, name, loginTime, ipAddress }) {
-  const timeFormatted = loginTime ? new Date(loginTime).toLocaleString() : new Date().toLocaleString();
+  const dateObj = loginTime ? new Date(loginTime) : new Date();
+  const timeFormatted = dateObj.toLocaleString('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  }) + ' (IST)';
 
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e1e2ed; border-radius: 16px; overflow: hidden; background-color: #ffffff;">
