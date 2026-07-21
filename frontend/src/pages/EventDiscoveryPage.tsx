@@ -27,6 +27,18 @@ export const EventDiscoveryPage: React.FC<EventDiscoveryPageProps> = ({
     { name: 'Workshop', icon: Zap, badgeBg: 'bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-200 border-indigo-300 dark:border-indigo-800', count: '6 Events' }
   ];
 
+  if (!events || events.length === 0) {
+    return (
+      <div className="space-y-8 animate-pulse p-4 sm:p-8">
+        <div className="h-64 sm:h-96 rounded-3xl bg-slate-200 dark:bg-slate-800 flex flex-col items-center justify-center text-center p-6 gap-3">
+          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200">Connecting to DiGi Campus Services...</h2>
+          <p className="text-xs text-slate-500 max-w-sm">Fetching upcoming campus hackathons, workshops, and cultural fests...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-12 animate-fade-in">
       {/* Hero Banner Section (Solid Deep High-Contrast Banner) */}
