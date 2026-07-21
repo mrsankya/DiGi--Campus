@@ -4,6 +4,7 @@ const Registration = require('../models/Registration');
 const Event = require('../models/Event');
 const User = require('../models/User');
 const { auth } = require('../middleware/auth');
+const { sendRsvpConfirmationEmail } = require('../utils/emailService');
 
 // Get XP Leaderboard (Top Ranked Students)
 router.get('/leaderboard', async (req, res) => {
@@ -73,6 +74,19 @@ router.post('/', auth, async (req, res) => {
         userObj.badges.push('⚡ Campus Pioneer');
       }
       await userObj.save();
+
+      // Trigger Email Notification (non-blocking)
+      sendRsvpConfirmationEmail({
+        toEmail: userObj.email,
+        studentName: userObj.name,
+        eventTitle: event.title,
+        eventDate: event.date,
+        eventTime: event.time,
+        venue: event.venue,
+        location: event.location,
+        ticketCode,
+        qrCodeUrl
+      }).catch(e => console.error('Failed to send confirmation email:', e.message));
     }
 
     const populatedReg = await Registration.findById(registration._id).populate('eventId');

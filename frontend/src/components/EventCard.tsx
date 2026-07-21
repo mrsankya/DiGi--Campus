@@ -1,5 +1,5 @@
-import React from 'react';
-import { Calendar, MapPin, Users, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar, MapPin, Users, ArrowRight, Heart } from 'lucide-react';
 import type { EventItem } from '../services/api';
 
 interface EventCardProps {
@@ -9,6 +9,35 @@ interface EventCardProps {
 }
 
 export const EventCard: React.FC<EventCardProps> = ({ event, onClick, onQuickRegister }) => {
+  const [isSaved, setIsSaved] = useState<boolean>(false);
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('digicampus_saved_events') || '[]');
+      setIsSaved(saved.includes(event._id));
+    } catch (e) {
+      setIsSaved(false);
+    }
+  }, [event._id]);
+
+  const toggleSave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const saved: string[] = JSON.parse(localStorage.getItem('digicampus_saved_events') || '[]');
+      let updated: string[];
+      if (saved.includes(event._id)) {
+        updated = saved.filter(id => id !== event._id);
+        setIsSaved(false);
+      } else {
+        updated = [...saved, event._id];
+        setIsSaved(true);
+      }
+      localStorage.setItem('digicampus_saved_events', JSON.stringify(updated));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const formattedDate = new Date(event.date).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -47,10 +76,19 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, onQuickReg
           {event.category}
         </span>
 
-        {/* Price Tag */}
-        <span className="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-black bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-md border border-slate-200 dark:border-slate-800">
-          {event.price === 0 ? 'FREE ENTRY' : `$${event.price}`}
-        </span>
+        {/* Price Tag & Heart Bookmark */}
+        <div className="absolute top-3 right-3 flex items-center gap-2">
+          <button
+            onClick={toggleSave}
+            title={isSaved ? 'Remove from Saved' : 'Save Event'}
+            className="p-1.5 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-md text-white transition-all hover:scale-110"
+          >
+            <Heart className={`w-4 h-4 ${isSaved ? 'text-rose-500 fill-rose-500' : 'text-white'}`} />
+          </button>
+          <span className="px-3 py-1.5 rounded-full text-xs font-black bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-md border border-slate-200 dark:border-slate-800">
+            {event.price === 0 ? 'FREE ENTRY' : `$${event.price}`}
+          </span>
+        </div>
 
         {/* Date badge */}
         <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-white text-xs font-bold bg-black/75 px-3 py-1.5 rounded-xl backdrop-blur-md">

@@ -28,17 +28,19 @@ const globalLimiter = rateLimit({
   message: { message: 'Too many requests from this IP, please try again after 15 minutes' }
 });
 
+// Strict Rate Limiting on Sign In & Account Creation (5 requests per 15 minutes per IP)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
+  max: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { message: 'Too many authentication attempts, please try again in 15 minutes' }
+  message: { message: 'Too many authentication attempts or email triggers from this IP. Please wait 15 minutes before trying again.' }
 });
 
 app.use('/api/', globalLimiter);
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
+app.use('/api/auth/google', authLimiter);
 
 // Database Connection
 const MONGODB_URI = process.env.MONGODB_URI;

@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Announcement = require('../models/Announcement');
+const User = require('../models/User');
 const { auth, authorizeRoles } = require('../middleware/auth');
+const { sendAnnouncementEmail } = require('../utils/emailService');
 
 // Public: Get all announcements
 router.get('/', async (req, res) => {
@@ -30,6 +32,19 @@ router.post('/', auth, authorizeRoles('admin', 'coordinator'), async (req, res) 
     });
 
     await newAnnouncement.save();
+
+    // Trigger async email notification to active campus users
+    User.find({ status: 'active' }).select('email').then(users => {
+      const emailList = users.map(u => u.email).filter(Boolean);
+      sendAnnouncementEmail({
+        toEmails: emailList,
+        title,
+        content,
+        category: category || 'General',
+        authorName: req.user.name || 'Campus Office'
+      }).catch(e => console.error('Failed to send announcement emails:', e.message));
+    }).catch(e => console.error(e));
+
     res.status(201).json(newAnnouncement);
   } catch (err) {
     res.status(500).json({ message: 'Error creating announcement' });

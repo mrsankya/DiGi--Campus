@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Calendar, Search, User as UserIcon, Ticket, LogOut, Sparkles, Shield, Trophy, Sun, Moon } from 'lucide-react';
+import { Calendar, Search, User as UserIcon, Ticket, LogOut, Sparkles, Shield, Trophy, Sun, Moon, Bell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ProfileModal } from './ProfileModal';
 import { LeaderboardModal } from './LeaderboardModal';
+import { AnnouncementsModal } from './AnnouncementsModal';
 
 interface NavbarProps {
   currentTab: 'discovery' | 'search' | 'dashboard' | 'admin';
@@ -15,6 +16,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
   const { user, logout, openAuthModal, theme, toggleTheme } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
+  const [announcementsOpen, setAnnouncementsOpen] = useState(false);
   const isAdminOrCoordinator = user && (user.role === 'admin' || user.role === 'coordinator');
 
   return (
@@ -121,11 +123,21 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
               </button>
             )}
 
+            {/* Campus Announcements Bell Button */}
+            <button
+              onClick={() => setAnnouncementsOpen(true)}
+              title="Campus Bulletins & Announcements"
+              className="relative p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-blue-400 hover:scale-105 active:scale-95 transition-all shadow-xs flex items-center justify-center"
+            >
+              <Bell className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
+            </button>
+
             {/* SLEEK SUN / MOON THEME TOGGLE BUTTON */}
             <button
               onClick={toggleTheme}
               title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
-              className="p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-amber-300 hover:scale-105 active:scale-95 transition-all shadow-xs flex items-center justify-center"
+              className="p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-amber-300 hover:scale-105 active:scale-95 transition-all shadow-xs flex items-center justify-center font-bold"
             >
               {theme === 'light' ? (
                 <Moon className="w-4 h-4 text-slate-800 fill-slate-800" />
@@ -183,6 +195,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
       <LeaderboardModal
         isOpen={leaderboardOpen}
         onClose={() => setLeaderboardOpen(false)}
+      />
+
+      {/* Campus Bulletins & Announcements Modal */}
+      <AnnouncementsModal
+        isOpen={announcementsOpen}
+        onClose={() => setAnnouncementsOpen(false)}
       />
     </>
   );

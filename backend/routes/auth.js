@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { auth } = require('../middleware/auth');
+const { sendWelcomeEmail, sendLoginNotificationEmail } = require('../utils/emailService');
 
 // Register
 router.post('/register', async (req, res) => {
@@ -33,6 +34,15 @@ router.post('/register', async (req, res) => {
     });
 
     await newUser.save();
+
+    // Trigger async Welcome Email on new account creation
+    sendWelcomeEmail({
+      toEmail: newUser.email,
+      name: newUser.name,
+      role: newUser.role,
+      department: newUser.department,
+      studentId: newUser.studentId
+    }).catch(e => console.error('Failed to send welcome email:', e.message));
 
     const token = jwt.sign(
       { id: newUser._id, role: newUser.role, name: newUser.name, email: newUser.email },
@@ -88,6 +98,14 @@ router.post('/login', async (req, res) => {
       { expiresIn: '7d' }
     );
 
+    // Trigger async Security Notification on successful sign-in
+    sendLoginNotificationEmail({
+      toEmail: user.email,
+      name: user.name,
+      loginTime: new Date(),
+      ipAddress: req.ip || req.headers['x-forwarded-for'] || 'Web App Client'
+    }).catch(e => console.error('Failed to send login notification email:', e.message));
+
     res.json({
       token,
       user: {
@@ -137,6 +155,23 @@ router.post('/google', async (req, res) => {
       });
 
       await user.save();
+
+      // Trigger Welcome Email for new Google user creation
+      sendWelcomeEmail({
+        toEmail: user.email,
+        name: user.name,
+        role: user.role,
+        department: user.department,
+        studentId: user.studentId
+      }).catch(e => console.error('Failed to send Google welcome email:', e.message));
+    } else {
+      // Trigger Login Security Alert for returning Google user
+      sendLoginNotificationEmail({
+        toEmail: user.email,
+        name: user.name,
+        loginTime: new Date(),
+        ipAddress: req.ip || req.headers['x-forwarded-for'] || 'Google Auth Client'
+      }).catch(e => console.error('Failed to send Google login notification email:', e.message));
     }
 
     const token = jwt.sign(
