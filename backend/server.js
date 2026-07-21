@@ -57,7 +57,7 @@ if (MONGODB_URI && !MONGODB_URI.includes('<db_password>')) {
   console.log('⚠️ MONGODB_URI contains placeholder <db_password>. Update backend/.env with your actual password.');
 }
 
-// Health Check
+// Health Check & Keep-Alive Endpoint
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
@@ -66,6 +66,16 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date()
   });
 });
+
+// Keep-Alive Self-Ping Engine (Prevents Render free tier from entering 15-min cold sleep)
+const https = require('https');
+setInterval(() => {
+  https.get('https://digi-campus.onrender.com/api/health', (res) => {
+    console.log(`📡 [Keep-Alive Ping] Server self-pinged /api/health - Status: ${res.statusCode}`);
+  }).on('error', (err) => {
+    console.error('❌ [Keep-Alive Ping Warning]:', err.message);
+  });
+}, 10 * 60 * 1000); // Self-ping every 10 minutes
 
 // API Routes
 app.use('/api/auth', authRoutes);

@@ -13,10 +13,67 @@ import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import type { EventItem } from './services/api';
 import { api } from './services/api';
 
+const INITIAL_DEFAULT_EVENTS: EventItem[] = [
+  {
+    _id: 'default-1',
+    title: 'DiGi Hackathon 2026: AI & Cloud Innovation Summit',
+    description: 'The flagship 36-hour inter-college hackathon with AI workshops, cash prizes, and Cloudflare mentorship!',
+    category: 'Tech',
+    date: '2026-08-15',
+    time: '09:00 AM',
+    location: 'Main Auditorium & Innovation Lab',
+    venue: 'Campus Tech Hub',
+    organizer: 'Computer Science Department & Coding Club',
+    department: 'CSE',
+    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1200',
+    capacity: 250,
+    registeredCount: 184,
+    price: 0,
+    isFeatured: true,
+    status: 'Upcoming'
+  },
+  {
+    _id: 'default-2',
+    title: 'TechnoVerse 2026: National Tech Symposium',
+    description: 'Join top engineering students across the state for project expos, paper presentations, and robotics battles.',
+    category: 'Tech',
+    date: '2026-08-20',
+    time: '10:00 AM',
+    location: 'Seminar Hall B',
+    venue: 'Engineering Block',
+    organizer: 'IEEE Student Branch',
+    department: 'ECE',
+    image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800',
+    capacity: 150,
+    registeredCount: 92,
+    price: 0,
+    isFeatured: false,
+    status: 'Upcoming'
+  },
+  {
+    _id: 'default-3',
+    title: 'Sanskriti 2026: Annual Cultural & Music Festival',
+    description: 'Experience live band performances, dance competitions, fashion shows, and food stalls at the biggest campus fest.',
+    category: 'Cultural',
+    date: '2026-09-05',
+    time: '04:00 PM',
+    location: 'Open Air Theatre (OAT)',
+    venue: 'Campus Grounds',
+    organizer: 'Cultural Student Council',
+    department: 'General',
+    image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800',
+    capacity: 500,
+    registeredCount: 340,
+    price: 0,
+    isFeatured: false,
+    status: 'Upcoming'
+  }
+];
+
 export function AppContent() {
   const { openAuthModal, user } = useAuth();
   const [currentTab, setCurrentTab] = useState<'discovery' | 'search' | 'dashboard' | 'admin'>('discovery');
-  const [events, setEvents] = useState<EventItem[]>([]);
+  const [events, setEvents] = useState<EventItem[]>(INITIAL_DEFAULT_EVENTS);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -26,9 +83,11 @@ export function AppContent() {
   const fetchEvents = async () => {
     try {
       const data = await api.getEvents();
-      setEvents(data);
+      if (data && data.length > 0) {
+        setEvents(data);
+      }
     } catch (err) {
-      console.error('Failed to fetch events', err);
+      console.error('Failed to fetch events from API, keeping fallback events', err);
     }
   };
 
