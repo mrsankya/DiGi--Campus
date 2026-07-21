@@ -3,15 +3,16 @@ const nodemailer = require('nodemailer');
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
-const EMAIL_FROM = process.env.EMAIL_FROM || 'onboarding@resend.dev';
+const EMAIL_FROM = process.env.EMAIL_FROM || 'DiGi Campus Portal <onboarding@resend.dev>';
 
 // Helper function to send email via official Resend SDK or Nodemailer SMTP fallback
 async function sendMail({ to, subject, html, text }) {
   // Method 1: Official Resend SDK
   if (RESEND_API_KEY && RESEND_API_KEY.startsWith('re_') && resend) {
     try {
+      const senderString = EMAIL_FROM.includes('<') ? EMAIL_FROM : `DiGi Campus Portal <${EMAIL_FROM}>`;
       const data = await resend.emails.send({
-        from: EMAIL_FROM,
+        from: senderString,
         to: Array.isArray(to) ? to : [to],
         subject,
         html,
