@@ -123,17 +123,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
               </button>
             )}
 
-            {/* Campus Announcements Bell Button */}
-            <button
-              onClick={() => setAnnouncementsOpen(true)}
-              title="Campus Bulletins & Announcements"
-              className="px-3 py-2 rounded-xl text-xs font-extrabold text-blue-800 dark:text-blue-300 bg-blue-100 dark:bg-blue-950/60 hover:bg-blue-200 border border-blue-300 dark:border-blue-700 transition-all flex items-center gap-1.5 relative shadow-xs"
-            >
-              <Bell className="w-4 h-4 text-blue-600 fill-blue-400" />
-              <span>Bulletins</span>
-              <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-            </button>
-
             {/* SLEEK SUN / MOON THEME TOGGLE BUTTON */}
             <button
               onClick={toggleTheme}
@@ -145,6 +134,17 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
               ) : (
                 <Sun className="w-4 h-4 text-amber-400 fill-amber-400" />
               )}
+            </button>
+
+            {/* Campus Announcements Bell Button (In Header RIGHT AFTER Dark Mode Toggle) */}
+            <button
+              onClick={() => setAnnouncementsOpen(true)}
+              title="Campus Bulletins & Notifications"
+              className="relative p-2 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/80 hover:scale-105 active:scale-95 transition-all shadow-xs flex items-center justify-center gap-1.5 font-bold"
+            >
+              <Bell className="w-4 h-4 text-blue-600 dark:text-blue-400 fill-blue-400" />
+              <span className="hidden sm:inline text-xs font-extrabold">Bulletins</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse border border-white dark:border-slate-900" />
             </button>
 
             {/* User Profile / Auth Area */}
@@ -203,22 +203,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
         isOpen={announcementsOpen}
         onClose={() => setAnnouncementsOpen(false)}
       />
-
-      {/* Floating Campus Bulletins Notification Button (Always Visible at Bottom Left) */}
-      <button
-        onClick={() => setAnnouncementsOpen(true)}
-        className="fixed bottom-6 left-6 z-40 px-4 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs shadow-2xl flex items-center gap-2.5 border border-white/20 backdrop-blur-md hover:scale-105 transition-all group"
-        title="View Campus Bulletins & Urgent Announcements"
-      >
-        <div className="relative">
-          <Bell className="w-5 h-5 text-amber-300 fill-amber-300 group-hover:rotate-12 transition-transform" />
-          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse border border-white" />
-        </div>
-        <span className="font-heading tracking-wide">Campus Bulletins</span>
-        <span className="px-2 py-0.5 rounded-full text-[10px] bg-amber-400 text-slate-900 font-extrabold uppercase">
-          Live
-        </span>
-      </button>
     </>
   );
 };
