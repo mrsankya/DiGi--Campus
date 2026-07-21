@@ -16,7 +16,7 @@
 - **Resend Transactional Email API Key:** Configured in `backend/.env` (`RESEND_API_KEY`)
 
 ## Core Architecture & Features Completed
-1. **GitHub Repository & Cloud Deployment**: Continuous deployment configured (Git & remote deployment updates paused per user preference).
+1. **GitHub Repository & Cloud Deployment**: Deployed to `https://github.com/mrsankya/DiGi--Campus` (Continuous deployment active for Cloudflare Pages & Render).
 2. **Multi-Tier Roles & Immunity**: Super Admin, Event Coordinator, Student. Primary Owner immunity protection for `mr.sankya@...`.
 3. **Live Camera Ticket QR Scanner & Verification**: `html5-qrcode` camera scanner modal with audio chime, ticket validation, auto-attendance marking, and certificate generation.
 4. **DiGi Bot - AI Campus Assistant**: Floating AI assistant powered by backend route `POST /api/bot/chat` providing instant answers on events, dates, venues, passes, and certificates.
