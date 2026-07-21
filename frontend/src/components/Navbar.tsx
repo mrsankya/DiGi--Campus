@@ -127,10 +127,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
             <button
               onClick={() => setAnnouncementsOpen(true)}
               title="Campus Bulletins & Announcements"
-              className="relative p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-blue-400 hover:scale-105 active:scale-95 transition-all shadow-xs flex items-center justify-center"
+              className="px-3 py-2 rounded-xl text-xs font-extrabold text-blue-800 dark:text-blue-300 bg-blue-100 dark:bg-blue-950/60 hover:bg-blue-200 border border-blue-300 dark:border-blue-700 transition-all flex items-center gap-1.5 relative shadow-xs"
             >
-              <Bell className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
+              <Bell className="w-4 h-4 text-blue-600 fill-blue-400" />
+              <span>Bulletins</span>
+              <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
             </button>
 
             {/* SLEEK SUN / MOON THEME TOGGLE BUTTON */}
