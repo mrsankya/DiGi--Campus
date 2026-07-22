@@ -30,6 +30,7 @@ const eventSchema = new mongoose.Schema({
   price: { type: Number, default: 0 },
   isFeatured: { type: Boolean, default: false },
   status: { type: String, enum: ['Upcoming', 'Ongoing', 'Completed', 'Cancelled'], default: 'Upcoming' },
+  approvalStatus: { type: String, enum: ['Approved', 'Pending', 'Rejected'], default: 'Approved' },
   agenda: [agendaItemSchema],
   speakers: [speakerSchema],
   createdById: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }

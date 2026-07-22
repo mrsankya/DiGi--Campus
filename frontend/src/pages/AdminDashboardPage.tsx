@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, Calendar, Edit, Trash2, PlusCircle, Shield, Megaphone, Lock, Crown, QrCode } from 'lucide-react';
+import { BarChart3, Calendar, Edit, Trash2, PlusCircle, Shield, Megaphone, Lock, Crown, QrCode, Clock, Check, XCircle } from 'lucide-react';
 import { api } from '../services/api';
 import type { EventItem, User, Announcement } from '../services/api';
 import { EditEventModal } from '../components/EditEventModal';
@@ -12,11 +12,12 @@ interface AdminDashboardPageProps {
 }
 
 export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onEventCreatedOrUpdated, onOpenCreateModal }) => {
-  const [activeTab, setActiveTab] = useState<'analytics' | 'events' | 'users' | 'announcements'>('analytics');
+  const [activeTab, setActiveTab] = useState<'analytics' | 'events' | 'users' | 'announcements' | 'approvals'>('analytics');
   
   // State
   const [analytics, setAnalytics] = useState<any>(null);
   const [events, setEvents] = useState<EventItem[]>([]);
+  const [pendingEvents, setPendingEvents] = useState<EventItem[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
 
@@ -39,15 +40,17 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onEventC
 
   const loadAdminData = async () => {
     try {
-      const [analyticsData, eventsData, usersData, announcementsData] = await Promise.all([
+      const [analyticsData, eventsData, pendingData, usersData, announcementsData] = await Promise.all([
         api.getAnalytics().catch(() => null),
         api.getEvents(),
+        api.getPendingEvents().catch(() => []),
         api.getAllUsers().catch(() => []),
         api.getAnnouncements().catch(() => [])
       ]);
 
       setAnalytics(analyticsData);
       setEvents(eventsData);
+      setPendingEvents(pendingData);
       setUsers(usersData);
       setAnnouncements(announcementsData);
     } catch (err) {
@@ -126,6 +129,17 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onEventC
     }
   };
 
+  const handleApprovalAction = async (eventId: string, approvalStatus: 'Approved' | 'Rejected') => {
+    try {
+      await api.updateEventApproval(eventId, approvalStatus);
+      alert(`Event ${approvalStatus === 'Approved' ? 'approved & published live!' : 'rejected.'}`);
+      await loadAdminData();
+      onEventCreatedOrUpdated();
+    } catch (err: any) {
+      alert(err.message || 'Failed to update event approval status');
+    }
+  };
+
   const filteredEvents = events.filter(e => {
     if (eventStatusFilter === 'All') return true;
     return e.status === eventStatusFilter;
@@ -194,6 +208,17 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onEventC
           }`}
         >
           <Megaphone className="w-4 h-4" /> Bulletins ({announcements.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('approvals')}
+          className={`pb-3 px-4 text-xs font-extrabold border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === 'approvals' ? 'border-amber-500 text-amber-600 dark:text-amber-400' : 'border-transparent text-[#737686] hover:text-[#191b23]'
+          }`}
+        >
+          <Clock className="w-4 h-4 text-amber-500" /> Approval Queue ({pendingEvents.length})
+          {pendingEvents.length > 0 && (
+            <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+          )}
         </button>
       </div>
 
@@ -532,6 +557,82 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onEventC
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Tab 5: Event Approval Queue */}
+      {activeTab === 'approvals' && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <Clock className="w-5 h-5 text-amber-500" /> Student Event Approval Queue
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Review and approve student-submitted events before publishing them live to the campus feed.
+              </p>
+            </div>
+            <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700">
+              {pendingEvents.length} Pending Submission{pendingEvents.length === 1 ? '' : 's'}
+            </span>
+          </div>
+
+          {pendingEvents.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {pendingEvents.map(event => (
+                <div
+                  key={event._id}
+                  className="bg-white dark:bg-slate-800/90 rounded-3xl border border-amber-300/80 dark:border-amber-700/80 p-6 shadow-md flex flex-col justify-between space-y-4 relative overflow-hidden"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="px-2.5 py-0.5 rounded-md text-[10px] font-extrabold bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 uppercase">
+                        Pending Review
+                      </span>
+                      <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                        Submitted by: {(event.createdById as any)?.name || 'Student'}
+                      </span>
+                    </div>
+
+                    <h3 className="text-base font-extrabold text-slate-900 dark:text-white">{event.title}</h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">{event.description}</p>
+
+                    <div className="grid grid-cols-2 gap-2 text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-700">
+                      <div><span className="font-bold text-slate-900 dark:text-white">Date:</span> {new Date(event.date).toLocaleDateString()}</div>
+                      <div><span className="font-bold text-slate-900 dark:text-white">Time:</span> {event.time}</div>
+                      <div><span className="font-bold text-slate-900 dark:text-white">Venue:</span> {event.location}</div>
+                      <div><span className="font-bold text-slate-900 dark:text-white">Organizer:</span> {event.organizer}</div>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center gap-3">
+                    <button
+                      onClick={() => handleApprovalAction(event._id, 'Approved')}
+                      className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <Check className="w-4 h-4" /> Approve & Publish Live
+                    </button>
+                    <button
+                      onClick={() => handleApprovalAction(event._id, 'Rejected')}
+                      className="px-4 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-extrabold text-xs border border-rose-200 dark:border-rose-800 hover:bg-rose-600 hover:text-white transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <XCircle className="w-4 h-4" /> Reject
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-slate-50 dark:bg-slate-900/40 p-12 rounded-3xl border border-slate-200 dark:border-slate-800 text-center space-y-3">
+              <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center mx-auto">
+                <Check className="w-7 h-7" />
+              </div>
+              <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Approval Queue is Clear</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+                All student-submitted events have been reviewed. New student event submissions will appear here for admin approval.
+              </p>
+            </div>
+          )}
         </div>
       )}
 

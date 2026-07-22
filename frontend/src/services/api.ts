@@ -52,8 +52,10 @@ export interface EventItem {
   price: number;
   isFeatured: boolean;
   status: 'Upcoming' | 'Ongoing' | 'Completed' | 'Cancelled';
+  approvalStatus?: 'Approved' | 'Pending' | 'Rejected';
   agenda?: AgendaItem[];
   speakers?: Speaker[];
+  createdById?: any;
 }
 
 export interface Registration {
@@ -211,6 +213,31 @@ export const api = {
   },
 
   // Events
+  async parseEventText(rawText: string): Promise<Partial<EventItem>> {
+    const res = await fetch(`${API_BASE}/events/parse-text`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rawText })
+    });
+    return await parseResponse(res);
+  },
+
+  async getPendingEvents(): Promise<EventItem[]> {
+    const res = await fetch(`${API_BASE}/events/pending/approval`, {
+      headers: getAuthHeaders()
+    });
+    return await parseResponse(res);
+  },
+
+  async updateEventApproval(id: string, approvalStatus: 'Approved' | 'Rejected'): Promise<EventItem> {
+    const res = await fetch(`${API_BASE}/events/${id}/approval`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ approvalStatus })
+    });
+    return await parseResponse(res);
+  },
+
   async getEvents(filters?: { category?: string; search?: string; featured?: boolean; department?: string; status?: string }): Promise<EventItem[]> {
     const params = new URLSearchParams();
     if (filters?.category) params.append('category', filters.category);
