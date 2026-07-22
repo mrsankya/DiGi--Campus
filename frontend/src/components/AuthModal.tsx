@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Sparkles, User, Lock, Mail, Building, Key, ShieldCheck, RefreshCw } from 'lucide-react';
+import { X, Sparkles, User, Lock, Mail, Building, ShieldCheck, RefreshCw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 
@@ -159,42 +159,6 @@ export const AuthModal: React.FC = () => {
       setError(err.message || 'Failed to resend OTP');
     } finally {
       setResendLoading(false);
-    }
-  };
-
-  const handleDemoStudent = async () => {
-    setError('');
-    setEmail('alex.rivera@digicampus.edu');
-    setPassword('password123');
-    setLoading(true);
-    try {
-      await login('alex.rivera@digicampus.edu', 'password123');
-    } catch (err: any) {
-      try {
-        await login('alex.rivera@campuspulse.edu', 'password123');
-      } catch (innerErr: any) {
-        setError(innerErr.message || 'Demo account error. Make sure backend server is running on http://localhost:5000');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDemoAdmin = async () => {
-    setError('');
-    setEmail('mr.sankya@digicampus.edu');
-    setPassword('Mr.sankya@123');
-    setLoading(true);
-    try {
-      await login('mr.sankya@digicampus.edu', 'Mr.sankya@123');
-    } catch (err: any) {
-      try {
-        await login('mr.sankya@campuspulse.edu', 'Mr.sankya@123');
-      } catch (innerErr: any) {
-        setError(innerErr.message || 'Demo account error. Make sure backend server is running on http://localhost:5000');
-      }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -456,31 +420,6 @@ export const AuthModal: React.FC = () => {
                   {loading ? 'Processing...' : mode === 'login' ? 'Sign In to Portal' : 'Send Email Verification OTP'}
                 </button>
               </form>
-
-              {/* Quick Demo Login Preset Buttons */}
-              <div className="p-4 bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 text-center">
-                <p className="text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-center gap-1">
-                  <Key className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" /> Quick Demo Logins
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={handleDemoStudent}
-                    disabled={loading}
-                    className="py-2 px-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white hover:border-blue-600 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
-                  >
-                    🎓 Student Demo
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleDemoAdmin}
-                    disabled={loading}
-                    className="py-2 px-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white hover:border-blue-600 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
-                  >
-                    ⚡ Admin (Mr. Sankya)
-                  </button>
-                </div>
-              </div>
             </>
           )}
         </div>
