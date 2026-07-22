@@ -33,6 +33,10 @@
 15. **AI Auto-Fill Event Text & WhatsApp Parser**: Backend route `POST /api/events/parse-text` extracts title, category, date, time, venue, organizer, department, capacity, and ticket price from raw WhatsApp messages / flyer text.
 16. **Student Event Submission & Admin Approval Queue**: Students can submit campus events; submissions default to `Pending` and are managed by Admins in an **Approval Queue ⏳** tab with 1-click **Approve & Publish Live** or **Reject** actions.
 17. **100% Free Email OTP Verification**: New registrations require a 6-digit email OTP (sent via Resend with 10-min expiration). Blocks fake account creation and awards +150 XP bonus upon verification.
+18. **Event Feedback & 1-5 Star Rating System ⭐**: Interactive rating picker and review comments on event pages. Auto-calculates average rating badges on event cards, displays student reviews feed, and awards +25 XP Gamification points per review.
+19. **Capacitor Native Android APK Mobile App 📱**: Integrated `@capacitor/core` and `@capacitor/android`. Built standalone native Android `.apk` file (`DiGi_Campus_v1.0.apk` at project root).
+
+
 
 
 
