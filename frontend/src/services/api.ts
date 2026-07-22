@@ -88,6 +88,36 @@ export interface Feedback {
   createdAt: string;
 }
 
+export interface TeamMember {
+  userId: User;
+  role: string;
+  joinedAt: string;
+}
+
+export interface Team {
+  _id: string;
+  name: string;
+  code: string;
+  eventId: EventItem;
+  leaderId: string;
+  members: TeamMember[];
+  maxMembers: number;
+  createdAt: string;
+}
+
+export interface TeammateListing {
+  _id: string;
+  eventId: EventItem;
+  postedById: User;
+  title: string;
+  skillsNeeded: string[];
+  description: string;
+  contactInfo: string;
+  status: 'open' | 'closed';
+  createdAt: string;
+}
+
+
 // Resolution for API Base URL
 const getApiBaseUrl = () => {
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
@@ -100,7 +130,7 @@ const getApiBaseUrl = () => {
 const API_BASE = getApiBaseUrl();
 
 const getAuthHeaders = (): Record<string, string> => {
-  const token = localStorage.getItem('campuspulse_token');
+  const token = localStorage.getItem('digi_campus_event_token');
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
@@ -134,7 +164,7 @@ export const api = {
       body: JSON.stringify({ email, password })
     });
     const data = await parseResponse(res);
-    localStorage.setItem('campuspulse_token', data.token);
+    localStorage.setItem('digi_campus_event_token', data.token);
     return data;
   },
 
@@ -145,7 +175,7 @@ export const api = {
       body: JSON.stringify(userData)
     });
     const data = await parseResponse(res);
-    localStorage.setItem('campuspulse_token', data.token);
+    localStorage.setItem('digi_campus_event_token', data.token);
     return data;
   },
 
@@ -156,7 +186,7 @@ export const api = {
       body: JSON.stringify(googleData)
     });
     const data = await parseResponse(res);
-    localStorage.setItem('campuspulse_token', data.token);
+    localStorage.setItem('digi_campus_event_token', data.token);
     return data;
   },
 
@@ -177,7 +207,7 @@ export const api = {
   },
 
   logout() {
-    localStorage.removeItem('campuspulse_token');
+    localStorage.removeItem('digi_campus_event_token');
   },
 
   // Events
@@ -366,6 +396,55 @@ export const api = {
       body: JSON.stringify({ eventId, rating, comment })
     });
     return await parseResponse(res);
+  },
+
+  // Teams & Matchmaking
+  async createTeam(name: string, eventId: string, maxMembers: number = 4): Promise<Team> {
+    const res = await fetch(`${API_BASE}/teams/create`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ name, eventId, maxMembers })
+    });
+    return await parseResponse(res);
+  },
+
+  async joinTeam(code: string): Promise<Team> {
+    const res = await fetch(`${API_BASE}/teams/join`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ code })
+    });
+    return await parseResponse(res);
+  },
+
+  async getMyTeams(): Promise<Team[]> {
+    const res = await fetch(`${API_BASE}/teams/my`, {
+      headers: getAuthHeaders()
+    });
+    return await parseResponse(res);
+  },
+
+  async getTeammateListings(eventId?: string): Promise<TeammateListing[]> {
+    const url = eventId ? `${API_BASE}/teams/listings?eventId=${eventId}` : `${API_BASE}/teams/listings`;
+    const res = await fetch(url);
+    return await parseResponse(res);
+  },
+
+  async createTeammateListing(data: { eventId: string; title: string; skillsNeeded: string[]; description: string; contactInfo: string }): Promise<TeammateListing> {
+    const res = await fetch(`${API_BASE}/teams/listings`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data)
+    });
+    return await parseResponse(res);
+  },
+
+  async deleteTeammateListing(id: string): Promise<void> {
+    const res = await fetch(`${API_BASE}/teams/listings/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders()
+    });
+    await parseResponse(res);
   },
 
   // Export CSV Helper

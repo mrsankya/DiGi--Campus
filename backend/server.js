@@ -28,13 +28,13 @@ const globalLimiter = rateLimit({
   message: { message: 'Too many requests from this IP, please try again after 15 minutes' }
 });
 
-// Strict Rate Limiting on Sign In & Account Creation (5 requests per 15 minutes per IP)
+// Rate Limiting Security on Sign In & Account Creation (25 requests per 15 minutes per IP)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 25,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { message: 'Too many authentication attempts or email triggers from this IP. Please wait 15 minutes before trying again.' }
+  message: { message: 'Too many authentication attempts from this IP. Please wait 15 minutes before trying again.' }
 });
 
 app.use('/api/', globalLimiter);
@@ -77,6 +77,8 @@ setInterval(() => {
   });
 }, 10 * 60 * 1000); // Self-ping every 10 minutes
 
+const teamRoutes = require('./routes/teams');
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
@@ -85,6 +87,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/bot', botRoutes);
+app.use('/api/teams', teamRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {

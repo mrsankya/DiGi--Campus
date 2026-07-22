@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
-import { Calendar, Search, User as UserIcon, Ticket, LogOut, Sparkles, Shield, Trophy, Sun, Moon, Bell } from 'lucide-react';
+import { Calendar, Search, User as UserIcon, Ticket, LogOut, Sparkles, Shield, Trophy, Sun, Moon, Bell, Users } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ProfileModal } from './ProfileModal';
 import { LeaderboardModal } from './LeaderboardModal';
 import { AnnouncementsModal } from './AnnouncementsModal';
+import { TeammateFinderModal } from './TeammateFinderModal';
+import type { EventItem } from '../services/api';
 
 interface NavbarProps {
   currentTab: 'discovery' | 'search' | 'dashboard' | 'admin';
   setCurrentTab: (tab: 'discovery' | 'search' | 'dashboard' | 'admin') => void;
   openCreateModal?: () => void;
   onSearch: (query: string) => void;
+  events?: EventItem[];
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSearch }) => {
+export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSearch, events = [] }) => {
   const { user, logout, openAuthModal, theme, toggleTheme } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const [announcementsOpen, setAnnouncementsOpen] = useState(false);
+  const [teammateFinderOpen, setTeammateFinderOpen] = useState(false);
   const isAdminOrCoordinator = user && (user.role === 'admin' || user.role === 'coordinator');
 
   return (
@@ -99,6 +103,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
               <span className="hidden sm:inline">My Passes</span>
             </button>
 
+            {/* Teammate Matcher Button */}
+            <button
+              onClick={() => setTeammateFinderOpen(true)}
+              className="px-3 py-2 rounded-xl text-xs font-extrabold text-blue-800 dark:text-blue-300 bg-blue-100 dark:bg-blue-950/60 hover:bg-blue-200 border border-blue-300 dark:border-blue-700 transition-all flex items-center gap-1.5 cursor-pointer"
+              title="Find Hackathon Teammates"
+            >
+              <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <span className="hidden sm:inline">Team Matcher</span>
+            </button>
+
             {/* Leaderboard XP Button */}
             <button
               onClick={() => setLeaderboardOpen(true)}
@@ -136,7 +150,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
               )}
             </button>
 
-            {/* Campus Announcements Bell Button (In Header RIGHT AFTER Dark Mode Toggle) */}
+            {/* Campus Announcements Bell Button */}
             <button
               onClick={() => setAnnouncementsOpen(true)}
               title="Campus Bulletins & Notifications"
@@ -202,6 +216,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
       <AnnouncementsModal
         isOpen={announcementsOpen}
         onClose={() => setAnnouncementsOpen(false)}
+      />
+
+      {/* Teammate Matcher Board Modal */}
+      <TeammateFinderModal
+        isOpen={teammateFinderOpen}
+        onClose={() => setTeammateFinderOpen(false)}
+        events={events}
       />
     </>
   );

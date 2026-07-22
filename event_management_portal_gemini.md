@@ -26,5 +26,9 @@
 8. **Campus Bulletins & Announcements Modal**: Navbar notification bell 🔔 icon with animated indicator triggering an official campus announcements modal with categorized filters (`Urgent`, `Venue Update`, `General`).
 9. **Event Favoriting / Bookmarking System**: 1-click Heart ❤️ toggle on event cards storing saved events in local persistence with quick access filter in search.
 10. **Advanced Search & Multi-Criteria Filtering**: Multi-sorting (Popularity, Date, Free First), price filter (Free vs Paid), and saved event filter.
-11. **Email Notification & Auth Rate Limiting**: Express email service (`backend/utils/emailService.js`) using Resend API to send automated Welcome emails on registration (+150 XP bonus notice), IST-formatted Sign-in Security Alert emails on login, RSVP ticket confirmation with QR passes, campus bulletins, and strict Rate Limiting (`express-rate-limit` capped at 5 auth requests / 15 minutes per IP).
-12. **24/7 Render Keep-Alive Ping Engine**: Automated 10-minute self-ping engine (`backend/server.js`) pinging `/api/health` to keep Render free tier awake 24/7 with zero cold sleep delay.
+11. **Email Notification & Auth Rate Limiting**: Express email service (`backend/utils/emailService.js`) using Resend API to send automated Welcome emails on registration (+150 XP bonus notice), IST-formatted Sign-in Security Alert emails on login, RSVP ticket confirmation with QR passes, campus bulletins, and Rate Limiting (`express-rate-limit` capped at 25 auth requests / 15 minutes per IP).
+12. **24/7 Render Keep-Alive & React Error Boundary**: React `ErrorBoundary.tsx` prevents blank screen crashes on cold starts or network failures; custom UI displays server status with 1-click page reload.
+13. **Manual Cloudflare Pages Deployment**: Disconnected GitHub integration; manual deployment via `npx wrangler pages deploy dist --project-name campuspulse-portal`.
+14. **Team Registration & Hackathon Teammate Finder**: Team creation with generated `TEAM-XXXX` codes, 1-click team code copy, team member roster view, and a dedicated **Teammate Matcher** board filtering requests by skills needed (React, Figma, AI/ML, Python, Node.js).
+
+

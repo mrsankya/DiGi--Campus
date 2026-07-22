@@ -3,6 +3,7 @@ import { Calendar, MapPin, Users, ArrowLeft, CheckCircle2, Star, Download } from
 import type { EventItem, Feedback } from '../services/api';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { TeamRegistrationModal } from '../components/TeamRegistrationModal';
 
 interface EventDetailsPageProps {
   eventId: string;
@@ -17,6 +18,7 @@ export const EventDetailsPage: React.FC<EventDetailsPageProps> = ({ eventId, onB
   const [loading, setLoading] = useState(true);
   const [registering, setRegistering] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [teamModalOpen, setTeamModalOpen] = useState(false);
   const [error, setError] = useState('');
 
   const fetchDetails = async () => {
@@ -237,17 +239,45 @@ export const EventDetailsPage: React.FC<EventDetailsPageProps> = ({ eventId, onB
                 <CheckCircle2 className="w-4 h-4 text-emerald-700" /> You Are Registered!
               </div>
             ) : (
-              <button
-                onClick={handleRSVP}
-                disabled={isFull || registering}
-                className="w-full py-3.5 rounded-2xl bg-[#2563eb] hover:bg-[#004ac6] text-white font-extrabold text-sm shadow-md hover:shadow-xl transition-all disabled:opacity-50"
-              >
-                {registering ? 'Securing Pass...' : isFull ? 'Event Housefull' : 'RSVP & Claim Pass'}
-              </button>
+              <div className="space-y-2">
+                <button
+                  onClick={handleRSVP}
+                  disabled={isFull || registering}
+                  className="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow-md hover:shadow-xl transition-all disabled:opacity-50 cursor-pointer"
+                >
+                  {registering ? 'Securing Pass...' : isFull ? 'Event Housefull' : 'Individual RSVP Pass'}
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (!user) {
+                      onOpenAuthModal();
+                    } else {
+                      setTeamModalOpen(true);
+                    }
+                  }}
+                  disabled={isFull}
+                  className="w-full py-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-blue-700 dark:text-blue-300 font-extrabold text-xs shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  <span>Create / Join Team Pass (2-4 Members)</span>
+                </button>
+              </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Team Registration Modal */}
+      <TeamRegistrationModal
+        event={event}
+        isOpen={teamModalOpen}
+        onClose={() => setTeamModalOpen(false)}
+        onSuccess={() => {
+          setIsRegistered(true);
+          fetchDetails();
+        }}
+      />
     </div>
   );
 };

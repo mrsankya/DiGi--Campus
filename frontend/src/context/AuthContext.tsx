@@ -44,7 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('campuspulse_token');
+    const token = localStorage.getItem('digi_campus_event_token');
     if (token) {
       api.getMe()
         .then(userData => setUser(userData))

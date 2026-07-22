@@ -140,6 +140,7 @@ export function AppContent() {
           setSearchQuery(q);
           if (currentTab !== 'search') setCurrentTab('search');
         }}
+        events={events}
       />
 
       {/* Main Page Body */}
