@@ -32,6 +32,8 @@
 14. **Team Registration & Hackathon Teammate Finder**: Team creation with generated `TEAM-XXXX` codes, 1-click team code copy, team member roster view, and a dedicated **Teammate Matcher** board filtering requests by skills needed (React, Figma, AI/ML, Python, Node.js).
 15. **AI Auto-Fill Event Text & WhatsApp Parser**: Backend route `POST /api/events/parse-text` extracts title, category, date, time, venue, organizer, department, capacity, and ticket price from raw WhatsApp messages / flyer text.
 16. **Student Event Submission & Admin Approval Queue**: Students can submit campus events; submissions default to `Pending` and are managed by Admins in an **Approval Queue ⏳** tab with 1-click **Approve & Publish Live** or **Reject** actions.
+17. **100% Free Email OTP Verification**: New registrations require a 6-digit email OTP (sent via Resend with 10-min expiration). Blocks fake account creation and awards +150 XP bonus upon verification.
+
 
 
 

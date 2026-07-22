@@ -5,14 +5,49 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 const EMAIL_FROM = process.env.EMAIL_FROM || 'DiGi Campus Portal <onboarding@resend.dev>';
 
-// Helper function to send email via official Resend SDK or Nodemailer SMTP fallback
+// Helper function to send email via Nodemailer SMTP (Gmail) or Resend SDK fallback
 async function sendMail({ to, subject, html, text }) {
-  // Method 1: Official Resend SDK
+  const host = process.env.SMTP_HOST;
+  const port = process.env.SMTP_PORT || 587;
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  // Formatted EMAIL_FROM
+  const senderEmail = user || 'onboarding@resend.dev';
+  const cleanFrom = process.env.EMAIL_FROM 
+    ? (process.env.EMAIL_FROM.includes('<') ? process.env.EMAIL_FROM : `DiGi Campus Portal <${process.env.EMAIL_FROM}>`)
+    : `DiGi Campus Portal <${senderEmail}>`;
+
+  // Method 1: Nodemailer SMTP (Gmail / Custom SMTP) - Highest Priority
+  if (host && user && pass) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host,
+        port: Number(port),
+        secure: port === '465',
+        auth: { user, pass }
+      });
+
+      const info = await transporter.sendMail({
+        from: cleanFrom,
+        to,
+        subject,
+        text,
+        html
+      });
+
+      console.log('✅ [GMAIL/SMTP EMAIL SENT SUCCESS]', info.messageId);
+      return info;
+    } catch (err) {
+      console.error('❌ Failed sending via Nodemailer SMTP:', err.message);
+    }
+  }
+
+  // Method 2: Official Resend SDK Fallback
   if (RESEND_API_KEY && RESEND_API_KEY.startsWith('re_') && resend) {
     try {
-      const senderString = EMAIL_FROM.includes('<') ? EMAIL_FROM : `DiGi Campus Portal <${EMAIL_FROM}>`;
       const data = await resend.emails.send({
-        from: senderString,
+        from: cleanFrom.includes('resend.dev') ? 'DiGi Campus Portal <onboarding@resend.dev>' : cleanFrom,
         to: Array.isArray(to) ? to : [to],
         subject,
         html,
@@ -24,29 +59,6 @@ async function sendMail({ to, subject, html, text }) {
     } catch (err) {
       console.error('❌ Failed sending via Resend SDK:', err.message);
     }
-  }
-
-  // Method 2: Nodemailer SMTP Fallback
-  const host = process.env.SMTP_HOST;
-  const port = process.env.SMTP_PORT || 587;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-
-  if (host && user && pass) {
-    const transporter = nodemailer.createTransport({
-      host,
-      port: Number(port),
-      secure: port === '465',
-      auth: { user, pass }
-    });
-
-    return await transporter.sendMail({
-      from: EMAIL_FROM,
-      to,
-      subject,
-      text,
-      html
-    });
   }
 
   // Method 3: Mock Transporter (Local Development Fallback)
