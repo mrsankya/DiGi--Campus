@@ -565,5 +565,37 @@ END:VCALENDAR`;
       headers: getAuthHeaders()
     });
     return await parseResponse(res);
+  },
+
+  // AI Campus Bot Assistant Query
+  async askDiGiBot(query: string): Promise<{ answer: string }> {
+    try {
+      const res = await fetch(`${API_BASE}/bot/ask`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query })
+      });
+      if (res.ok) {
+        return await parseResponse(res);
+      }
+    } catch (e) {
+      console.warn('Backend bot endpoint fallback triggered', e);
+    }
+
+    // Client-side intelligent fallback response generator
+    const q = query.toLowerCase();
+    let answer = "I am DiGi Bot, your 24/7 AI Campus Event Assistant! You can discover campus hackathons, Workshops, Cultural Fests, RSVP for passes, or claim certificates!";
+
+    if (q.includes('tech') || q.includes('hackathon') || q.includes('ai') || q.includes('coding')) {
+      answer = "🚀 Upcoming Tech Events:\n• DiGi Hackathon 2026: 36-hr AI Summit at Main Auditorium\n• TechnoVerse 2026: National Tech Symposium at Seminar Hall B\n\nClick on 'Explore' or any event card to view registration details and claim your pass!";
+    } else if (q.includes('certificate') || q.includes('pass') || q.includes('rsvp')) {
+      answer = "📜 Certificates & Passes:\n• All your RSVP passes and verified QR certificates are stored under the 'My Passes' tab.\n• Show your QR pass at the venue entrance for instant check-in!";
+    } else if (q.includes('venue') || q.includes('hall') || q.includes('location')) {
+      answer = "📍 Campus Venues:\n• Main Auditorium & Innovation Lab (Ground Floor)\n• Open Air Theatre OAT (Campus Grounds)\n• Seminar Hall B (Engineering Block)";
+    } else if (q.includes('team') || q.includes('partner') || q.includes('teammate')) {
+      answer = "👥 Hackathon Teammate Finder:\nTap 'Team Matcher' in the top header or bottom menu to find teammates by skills (React, Python, Figma, AI/ML)!";
+    }
+
+    return { answer };
   }
 };
