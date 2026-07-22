@@ -267,7 +267,7 @@ export const EventDetailsPage: React.FC<EventDetailsPageProps> = ({ eventId, onB
             <div className="p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-between">
               <span className="text-xs font-black text-blue-900 dark:text-blue-200">Ticket Price</span>
               <span className="text-xl font-black text-blue-600 dark:text-blue-400">
-                {event.price === 0 ? 'FREE ENTRY' : `$${event.price}`}
+                {event.price === 0 ? 'FREE ENTRY' : `₹${event.price}`}
               </span>
             </div>
 

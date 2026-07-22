@@ -306,7 +306,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({ isOpen, onCl
             </div>
 
             <div>
-              <label className="block text-xs font-extrabold text-slate-900 dark:text-slate-200 mb-1">Price ($)</label>
+              <label className="block text-xs font-extrabold text-slate-900 dark:text-slate-200 mb-1">Ticket Price (₹)</label>
               <input
                 type="number"
                 min="0"

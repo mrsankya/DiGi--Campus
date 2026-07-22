@@ -230,7 +230,7 @@ export const EditEventModal: React.FC<EditEventModalProps> = ({ event, isOpen, o
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#191b23] mb-1">Price ($)</label>
+              <label className="block text-xs font-bold text-[#191b23] mb-1">Price (₹)</label>
               <input
                 type="number"
                 min="0"

@@ -97,7 +97,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, onQuickReg
             <Heart className={`w-4 h-4 ${isSaved ? 'text-rose-500 fill-rose-500' : 'text-white'}`} />
           </button>
           <span className="px-3 py-1.5 rounded-full text-xs font-black bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-md border border-slate-200 dark:border-slate-800">
-            {event.price === 0 ? 'FREE ENTRY' : `$${event.price}`}
+            {event.price === 0 ? 'FREE ENTRY' : `₹${event.price}`}
           </span>
         </div>
 
