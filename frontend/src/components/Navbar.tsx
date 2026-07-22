@@ -25,27 +25,28 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white dark:bg-[#090d16] border-b border-slate-200 dark:border-slate-800 transition-colors shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      {/* Top Navbar Header */}
+      <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#090d16]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors shadow-xs">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
           {/* Brand Logo */}
           <div 
             onClick={() => setCurrentTab('discovery')} 
-            className="flex items-center gap-2.5 cursor-pointer group"
+            className="flex items-center gap-2 cursor-pointer group shrink-0"
           >
-            <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
-              <Sparkles className="w-5 h-5 text-amber-300 fill-amber-300" />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-300 fill-amber-300" />
             </div>
             <div>
-              <span className="text-xl font-extrabold font-heading text-slate-900 dark:text-white">
+              <span className="text-lg sm:text-xl font-extrabold font-heading text-slate-900 dark:text-white">
                 DiGi Campus
               </span>
-              <span className="hidden sm:inline-block ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800">
+              <span className="hidden sm:inline-block ml-2 text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800">
                 Portal
               </span>
             </div>
           </div>
 
-          {/* Global Quick Search */}
+          {/* Global Quick Search (Tablets & Desktops) */}
           <div className="hidden md:flex flex-1 max-w-md relative">
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -59,30 +60,30 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
             />
           </div>
 
-          {/* Nav Links */}
+          {/* Top Desktop & Tablet Navigation */}
           <nav className="flex items-center gap-1 sm:gap-2">
             <button
               onClick={() => setCurrentTab('discovery')}
-              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`hidden sm:flex px-3 py-2 rounded-xl text-xs font-bold transition-all items-center gap-1.5 ${
                 currentTab === 'discovery' 
                   ? 'bg-blue-600 text-white shadow-md' 
                   : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               <Calendar className="w-4 h-4" />
-              <span className="hidden sm:inline">Discover</span>
+              <span>Discover</span>
             </button>
 
             <button
               onClick={() => setCurrentTab('search')}
-              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`hidden sm:flex px-3 py-2 rounded-xl text-xs font-bold transition-all items-center gap-1.5 ${
                 currentTab === 'search' 
                   ? 'bg-blue-600 text-white shadow-md' 
                   : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               <Search className="w-4 h-4" />
-              <span className="hidden sm:inline">Explore</span>
+              <span>Explore</span>
             </button>
 
             <button
@@ -93,47 +94,47 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
                   setCurrentTab('dashboard');
                 }
               }}
-              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`hidden sm:flex px-3 py-2 rounded-xl text-xs font-bold transition-all items-center gap-1.5 ${
                 currentTab === 'dashboard' 
                   ? 'bg-blue-600 text-white shadow-md' 
                   : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               <Ticket className="w-4 h-4" />
-              <span className="hidden sm:inline">My Passes</span>
+              <span>My Passes</span>
             </button>
 
             {/* Teammate Matcher Button */}
             <button
               onClick={() => setTeammateFinderOpen(true)}
-              className="px-3 py-2 rounded-xl text-xs font-extrabold text-blue-800 dark:text-blue-300 bg-blue-100 dark:bg-blue-950/60 hover:bg-blue-200 border border-blue-300 dark:border-blue-700 transition-all flex items-center gap-1.5 cursor-pointer"
+              className="px-2.5 sm:px-3 py-2 rounded-xl text-xs font-extrabold text-blue-800 dark:text-blue-300 bg-blue-100 dark:bg-blue-950/60 hover:bg-blue-200 border border-blue-300 dark:border-blue-700 transition-all flex items-center gap-1.5 cursor-pointer"
               title="Find Hackathon Teammates"
             >
               <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span className="hidden sm:inline">Team Matcher</span>
+              <span className="hidden md:inline">Team Matcher</span>
             </button>
 
             {/* Leaderboard XP Button */}
             <button
               onClick={() => setLeaderboardOpen(true)}
-              className="px-3 py-2 rounded-xl text-xs font-extrabold text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/60 hover:bg-amber-200 border border-amber-300 dark:border-amber-700 transition-all flex items-center gap-1.5"
+              className="px-2.5 sm:px-3 py-2 rounded-xl text-xs font-extrabold text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/60 hover:bg-amber-200 border border-amber-300 dark:border-amber-700 transition-all flex items-center gap-1.5"
             >
               <Trophy className="w-4 h-4 text-amber-600 fill-amber-400" />
-              <span className="hidden sm:inline">XP Ranks</span>
+              <span className="hidden md:inline">XP Ranks</span>
             </button>
 
             {/* Admin Console Button */}
             {isAdminOrCoordinator && (
               <button
                 onClick={() => setCurrentTab('admin')}
-                className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                   currentTab === 'admin' 
                     ? 'bg-purple-600 text-white shadow-md' 
                     : 'bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 hover:bg-purple-200 border border-purple-300 dark:border-purple-800'
                 }`}
               >
                 <Shield className="w-4 h-4" />
-                <span className="hidden sm:inline">Admin Console</span>
+                <span className="hidden md:inline">Admin</span>
               </button>
             )}
 
@@ -157,13 +158,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
               className="relative p-2 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/80 hover:scale-105 active:scale-95 transition-all shadow-xs flex items-center justify-center gap-1.5 font-bold"
             >
               <Bell className="w-4 h-4 text-blue-600 dark:text-blue-400 fill-blue-400" />
-              <span className="hidden sm:inline text-xs font-extrabold">Bulletins</span>
+              <span className="hidden lg:inline text-xs font-extrabold">Bulletins</span>
               <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse border border-white dark:border-slate-900" />
             </button>
 
             {/* User Profile / Auth Area */}
             {user ? (
-              <div className="flex items-center gap-2 ml-1">
+              <div className="flex items-center gap-1.5 ml-1">
                 <div 
                   onClick={() => setProfileOpen(true)}
                   className="flex items-center gap-2 cursor-pointer p-1 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"
@@ -190,7 +191,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
             ) : (
               <button
                 onClick={() => openAuthModal('login')}
-                className="ml-1 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md transition-all flex items-center gap-1.5"
+                className="ml-1 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 <UserIcon className="w-4 h-4" />
                 <span>Login</span>
@@ -199,6 +200,80 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onSea
           </nav>
         </div>
       </header>
+
+      {/* MOBILE BOTTOM NAVIGATION BAR (Phones <640px) */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#090d16]/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 sm:hidden flex items-center justify-around py-2 px-1 shadow-2xl transition-colors">
+        <button
+          onClick={() => setCurrentTab('discovery')}
+          className={`flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all ${
+            currentTab === 'discovery' ? 'text-blue-600 dark:text-blue-400 font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
+          }`}
+        >
+          <Calendar className="w-5 h-5" />
+          <span className="text-[10px]">Discover</span>
+        </button>
+
+        <button
+          onClick={() => setCurrentTab('search')}
+          className={`flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all ${
+            currentTab === 'search' ? 'text-blue-600 dark:text-blue-400 font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
+          }`}
+        >
+          <Search className="w-5 h-5" />
+          <span className="text-[10px]">Explore</span>
+        </button>
+
+        <button
+          onClick={() => {
+            if (!user) openAuthModal('login');
+            else setCurrentTab('dashboard');
+          }}
+          className={`flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all ${
+            currentTab === 'dashboard' ? 'text-blue-600 dark:text-blue-400 font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
+          }`}
+        >
+          <Ticket className="w-5 h-5" />
+          <span className="text-[10px]">My Passes</span>
+        </button>
+
+        {isAdminOrCoordinator ? (
+          <button
+            onClick={() => setCurrentTab('admin')}
+            className={`flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all ${
+              currentTab === 'admin' ? 'text-purple-600 dark:text-purple-400 font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
+            }`}
+          >
+            <Shield className="w-5 h-5" />
+            <span className="text-[10px]">Admin</span>
+          </button>
+        ) : (
+          <button
+            onClick={() => setTeammateFinderOpen(true)}
+            className="flex flex-col items-center gap-1 p-1.5 text-blue-600 dark:text-blue-400 font-bold"
+          >
+            <Users className="w-5 h-5" />
+            <span className="text-[10px]">Teams</span>
+          </button>
+        )}
+
+        {user ? (
+          <button
+            onClick={() => setProfileOpen(true)}
+            className="flex flex-col items-center gap-1 p-1.5 text-slate-700 dark:text-slate-300 font-bold"
+          >
+            <img src={user.avatar} alt={user.name} className="w-5 h-5 rounded-full object-cover border border-blue-600" />
+            <span className="text-[10px]">Profile</span>
+          </button>
+        ) : (
+          <button
+            onClick={() => openAuthModal('login')}
+            className="flex flex-col items-center gap-1 p-1.5 text-blue-600 font-bold"
+          >
+            <UserIcon className="w-5 h-5" />
+            <span className="text-[10px]">Login</span>
+          </button>
+        )}
+      </div>
 
       {/* User Profile Modal */}
       <ProfileModal

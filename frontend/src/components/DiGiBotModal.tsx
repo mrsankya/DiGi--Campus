@@ -75,7 +75,7 @@ export const DiGiBotModal: React.FC = () => {
       {/* Floating Trigger Button in Bottom-Right Corner */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-40 p-3.5 rounded-full bg-gradient-to-r from-[#004ac6] to-[#2563eb] text-white shadow-2xl hover:scale-105 transition-all flex items-center gap-2 group ${
+        className={`fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-40 p-3.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-2xl hover:scale-105 transition-all flex items-center gap-2 group ${
           isOpen ? 'hidden' : 'flex'
         }`}
       >
