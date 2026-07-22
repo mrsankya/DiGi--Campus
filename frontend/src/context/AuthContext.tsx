@@ -6,7 +6,8 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (userData: { name: string; email: string; password: string; role?: string; department?: string }) => Promise<void>;
+  register: (userData: { name: string; email: string; password: string; role?: string; department?: string }) => Promise<any>;
+  verifyOtp: (userId: string, otpCode: string) => Promise<void>;
   logout: () => void;
   openAuthModal: (mode?: 'login' | 'register') => void;
   closeAuthModal: () => void;
@@ -66,6 +67,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (userData: { name: string; email: string; password: string; role?: string; department?: string }) => {
     const data = await api.register(userData);
+    if (data.user) {
+      setUser(data.user);
+      setAuthModalOpen(false);
+    }
+    return data;
+  };
+
+  const verifyOtp = async (userId: string, otpCode: string) => {
+    const data = await api.verifyOtp(userId, otpCode);
     setUser(data.user);
     setAuthModalOpen(false);
   };
@@ -90,6 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       loading,
       login,
       register,
+      verifyOtp,
       logout,
       openAuthModal,
       closeAuthModal,

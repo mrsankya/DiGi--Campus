@@ -30,5 +30,8 @@
 12. **24/7 Render Keep-Alive & React Error Boundary**: React `ErrorBoundary.tsx` prevents blank screen crashes on cold starts or network failures; custom UI displays server status with 1-click page reload.
 13. **Manual Cloudflare Pages Deployment**: Disconnected GitHub integration; manual deployment via `npx wrangler pages deploy dist --project-name campuspulse-portal`.
 14. **Team Registration & Hackathon Teammate Finder**: Team creation with generated `TEAM-XXXX` codes, 1-click team code copy, team member roster view, and a dedicated **Teammate Matcher** board filtering requests by skills needed (React, Figma, AI/ML, Python, Node.js).
+15. **AI Auto-Fill Event Text & WhatsApp Parser**: Backend route `POST /api/events/parse-text` extracts title, category, date, time, venue, organizer, department, capacity, and ticket price from raw WhatsApp messages / flyer text.
+16. **Student Event Submission & Admin Approval Queue**: Students can submit campus events; submissions default to `Pending` and are managed by Admins in an **Approval Queue ⏳** tab with 1-click **Approve & Publish Live** or **Reject** actions.
+
 
 

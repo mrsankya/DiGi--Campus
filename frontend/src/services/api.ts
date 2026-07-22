@@ -170,15 +170,37 @@ export const api = {
     return data;
   },
 
-  async register(userData: { name: string; email: string; password: string; role?: string; department?: string; studentId?: string }): Promise<{ token: string; user: User }> {
+  async register(userData: { name: string; email: string; password: string; role?: string; department?: string; studentId?: string }): Promise<{ requiresOtp?: boolean; message?: string; userId?: string; email?: string; token?: string; user?: User }> {
     const res = await fetch(`${API_BASE}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
     });
     const data = await parseResponse(res);
+    if (data.token) {
+      localStorage.setItem('digi_campus_event_token', data.token);
+    }
+    return data;
+  },
+
+  async verifyOtp(userId: string, otpCode: string): Promise<{ token: string; user: User }> {
+    const res = await fetch(`${API_BASE}/auth/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, otpCode })
+    });
+    const data = await parseResponse(res);
     localStorage.setItem('digi_campus_event_token', data.token);
     return data;
+  },
+
+  async resendOtp(userId: string): Promise<{ message: string }> {
+    const res = await fetch(`${API_BASE}/auth/resend-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId })
+    });
+    return await parseResponse(res);
   },
 
   async loginWithGoogle(googleData: { email: string; name: string; avatar?: string; role?: string; department?: string }): Promise<{ token: string; user: User }> {

@@ -205,9 +205,42 @@ async function sendAnnouncementEmail({ toEmails, title, content, category, autho
   });
 }
 
+/**
+ * Send Email OTP Verification Code for Account Creation
+ */
+async function sendOtpEmail({ toEmail, name, otpCode }) {
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e1e2ed; border-radius: 16px; overflow: hidden; background-color: #ffffff;">
+      <div style="background: linear-gradient(135deg, #004ac6, #2563eb); padding: 24px; text-align: center; color: #ffffff;">
+        <h1 style="margin: 0; font-size: 24px; font-weight: 900;">DiGi Campus Email Verification 🛡️</h1>
+        <p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9;">Secure Account Activation Code</p>
+      </div>
+
+      <div style="padding: 28px; color: #191b23; text-align: center;">
+        <p style="font-size: 16px; font-weight: 700; margin-top: 0;">Hello ${name},</p>
+        <p style="font-size: 14px; color: #434655;">Please enter the following 6-digit OTP code to verify your email address and activate your DiGi Campus student account:</p>
+
+        <div style="background-color: #f3f3fe; border: 2px dashed #004ac6; padding: 18px; border-radius: 16px; margin: 24px auto; max-width: 280px;">
+          <span style="font-family: monospace, Courier, sans-serif; font-size: 32px; font-weight: 900; letter-spacing: 8px; color: #004ac6;">${otpCode}</span>
+        </div>
+
+        <p style="font-size: 12px; color: #737686;">This verification code is valid for <strong>10 minutes</strong>. Do not share this code with anyone.<br><br>If you did not initiate this registration, please ignore this email.</p>
+      </div>
+    </div>
+  `;
+
+  return await sendMail({
+    to: toEmail,
+    subject: `🛡️ Your DiGi Campus Email OTP Code is ${otpCode}`,
+    text: `Hello ${name}, your DiGi Campus email verification OTP code is: ${otpCode}. Valid for 10 minutes.`,
+    html: htmlContent
+  });
+}
+
 module.exports = {
   sendWelcomeEmail,
   sendLoginNotificationEmail,
   sendRsvpConfirmationEmail,
-  sendAnnouncementEmail
+  sendAnnouncementEmail,
+  sendOtpEmail
 };

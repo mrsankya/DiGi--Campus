@@ -15,6 +15,9 @@ const userSchema = new mongoose.Schema({
   github: { type: String, default: '' },
   linkedin: { type: String, default: '' },
   status: { type: String, enum: ['active', 'deactivated'], default: 'active' },
+  isEmailVerified: { type: Boolean, default: false },
+  otpCode: { type: String },
+  otpExpiresAt: { type: Date },
   xpPoints: { type: Number, default: 150 }, // Initial joining bonus XP
   level: { type: Number, default: 1 },
   badges: [{ type: String }],
