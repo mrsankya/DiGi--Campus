@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, Users, ArrowRight, Heart } from 'lucide-react';
+import { Calendar, MapPin, Users, ArrowRight, Heart, Star } from 'lucide-react';
 import type { EventItem } from '../services/api';
 
 interface EventCardProps {
@@ -71,10 +71,21 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, onQuickReg
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         
-        {/* Category Pill */}
-        <span className={`absolute top-3 left-3 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-md ${categoryColors[event.category] || 'bg-slate-800 text-white'}`}>
-          {event.category}
-        </span>
+        {/* Category Pill & Rating Badge */}
+        <div className="absolute top-3 left-3 flex items-center gap-2">
+          <span className={`px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-md ${categoryColors[event.category] || 'bg-slate-800 text-white'}`}>
+            {event.category}
+          </span>
+          {event.averageRating !== undefined && event.averageRating > 0 && (
+            <span className="px-2.5 py-1 rounded-full text-xs font-black bg-amber-500 text-white shadow-md flex items-center gap-1">
+              <Star className="w-3 h-3 fill-white text-white" />
+              <span>{event.averageRating.toFixed(1)}</span>
+              {event.totalReviews && event.totalReviews > 0 && (
+                <span className="text-[10px] opacity-90">({event.totalReviews})</span>
+              )}
+            </span>
+          )}
+        </div>
 
         {/* Price Tag & Heart Bookmark */}
         <div className="absolute top-3 right-3 flex items-center gap-2">

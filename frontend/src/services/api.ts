@@ -53,9 +53,22 @@ export interface EventItem {
   isFeatured: boolean;
   status: 'Upcoming' | 'Ongoing' | 'Completed' | 'Cancelled';
   approvalStatus?: 'Approved' | 'Pending' | 'Rejected';
+  averageRating?: number;
+  totalReviews?: number;
   agenda?: AgendaItem[];
   speakers?: Speaker[];
   createdById?: any;
+}
+
+export interface FeedbackItem {
+  _id: string;
+  eventId: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
 }
 
 export interface Registration {
@@ -432,21 +445,6 @@ export const api = {
     await parseResponse(res);
   },
 
-  // Feedback
-  async getFeedback(eventId: string): Promise<{ avgRating: number; totalCount: number; feedbacks: Feedback[] }> {
-    const res = await fetch(`${API_BASE}/feedback/event/${eventId}`);
-    return await parseResponse(res);
-  },
-
-  async submitFeedback(eventId: string, rating: number, comment: string): Promise<Feedback> {
-    const res = await fetch(`${API_BASE}/feedback`, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ eventId, rating, comment })
-    });
-    return await parseResponse(res);
-  },
-
   // Teams & Matchmaking
   async createTeam(name: string, eventId: string, maxMembers: number = 4): Promise<Team> {
     const res = await fetch(`${API_BASE}/teams/create`, {
@@ -544,5 +542,28 @@ END:VCALENDAR`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  },
+
+  // Event Feedback & Reviews
+  async submitFeedback(eventId: string, rating: number, comment: string): Promise<{ feedback: FeedbackItem; averageRating: number; totalReviews: number; xpPoints: number }> {
+    const res = await fetch(`${API_BASE}/feedback`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ eventId, rating, comment })
+    });
+    return await parseResponse(res);
+  },
+
+  async getEventFeedback(eventId: string): Promise<{ reviews: FeedbackItem[]; averageRating: number; totalReviews: number }> {
+    const res = await fetch(`${API_BASE}/feedback/event/${eventId}`);
+    return await parseResponse(res);
+  },
+
+  async deleteFeedback(id: string): Promise<{ message: string; averageRating: number; totalReviews: number }> {
+    const res = await fetch(`${API_BASE}/feedback/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders()
+    });
+    return await parseResponse(res);
   }
 };

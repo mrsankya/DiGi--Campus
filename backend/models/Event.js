@@ -31,6 +31,8 @@ const eventSchema = new mongoose.Schema({
   isFeatured: { type: Boolean, default: false },
   status: { type: String, enum: ['Upcoming', 'Ongoing', 'Completed', 'Cancelled'], default: 'Upcoming' },
   approvalStatus: { type: String, enum: ['Approved', 'Pending', 'Rejected'], default: 'Approved' },
+  averageRating: { type: Number, default: 0 },
+  totalReviews: { type: Number, default: 0 },
   agenda: [agendaItemSchema],
   speakers: [speakerSchema],
   createdById: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
