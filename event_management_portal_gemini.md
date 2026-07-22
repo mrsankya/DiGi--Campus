@@ -36,6 +36,8 @@
 18. **Event Feedback & 1-5 Star Rating System ⭐**: Interactive rating picker and review comments on event pages. Auto-calculates average rating badges on event cards, displays student reviews feed, and awards +25 XP Gamification points per review.
 19. **Capacitor Native Android APK Mobile App 📱**: Integrated `@capacitor/core` and `@capacitor/android`. Built standalone native Android `.apk` file (`DiGi_Campus_v1.0.apk` at project root).
 20. **Indian Rupee (₹) Currency & Mobile View Optimization 📱**: Updated all price displays from `$` to `₹` (Rupees) across event cards, event details, host modals, and edit forms. Added touch-friendly mobile viewport rules.
+21. **Device Poster Image File Upload & Zero-Scroll Mobile Header 🖼️📱**: Dual poster input (File Upload from device gallery/storage + Image URL), compact zero-overflow top header for mobile screens, and a 5-tab App Bottom Navigation Bar (`Discover`, `Explore`, `Passes`, `Teams`, `XP Ranks`).
+
 
 
 
